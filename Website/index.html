@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Envoy Billboard - Test Page</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+
+    <!-- Web3 -->
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+
+  </head>
+
+  <body>
+    <h1>Envoy Billboard - Example page</h1><br />
+
+    <!-- GRID -->
+    <h2>Grid</h2>
+    <div id="d_gridWrapper" class="grid-wrapper">
+    </div>
+    <br />
+
+    <!-- WALLET -->
+    <h2>Wallet</h2>
+    <div id="d_connectWallet" style="display: none;">
+      <p>Connected wallet: <strong id="i_wallet_address">...</strong></p>
+    </div>
+    <button id="b_connectWallet">Connect wallet</button>
+    <br />
+
+    <!-- SETTERS -->
+    <div id="d_setters" style="display: none;">
+      <h2>NFT settings</h2>
+
+      <h3>Redirect URL</h3>
+
+      NFT index:
+      <input id="s_index" type="number">
+      <br />
+
+      NFT URI:
+      <input id="s_uri" type="text">
+      <br />
+
+      <button id="s_button" type="submit">Sign transaction</button>
+    </div>
+
+    <!-- JS LIBS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+
+    <!-- START APP -->
+    <script type="module">
+
+      import { loadPage } from './js/index-logic.js';
+
+      // On page load, setup wallet
+      window.addEventListener('load', async () => {
+        loadPage();
+      });
+
+    </script>
+
+  </body>
+</html>

@@ -9,14 +9,35 @@ contract EnvoyBillboard is ERC721, Ownable {
   using SafeMath for uint256;
 
   //
+  // ******************* METADATA STRUCT *******************
+  //
+
+  struct MetaData {
+    string image;
+    string city;
+    string redirectUrl;
+    string adImage;
+    bool status;
+    string ownerName;
+  }
+
+  //
   // ******************* VARIABLES *******************
   //
+
+  // MetaData map
+  mapping(uint256 => MetaData) private _tokenData;
+
+
 
   // URIs
   mapping(uint256 => string) private _tokenURIs;
 
   // Images
   mapping(uint256 => string) private _tokenAdImages;
+
+
+
 
   //
   // ******************* SETUP *******************
@@ -40,7 +61,7 @@ contract EnvoyBillboard is ERC721, Ownable {
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "URI query for nonexistent token");
 
-    return _tokenURIs[tokenId];
+    return _tokenData[tokenId].adImage;
   }
 
   function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
