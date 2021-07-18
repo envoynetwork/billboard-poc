@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Envoy Billboard - Test Page</title>
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Example page</h1><br/>
+
+        <!-- WALLET -->
+        <h2>Wallet</h2>
+
+        <div id="t_wallet_block" style="display: none;">
+            Connected: <strong id="t_wallet_address">...</strong>  
+        </div>
+
+        <button id="b_connectWallet">Connect wallet</button>
+
+
+
+        
+
+        <br/>
+
+        <!-- GRID -->
+        <h2>Grid</h2>
+
+        
+
+        <br/>
+
+
+        <!-- SETTERS -->
+        <h2>NFT settings</h2>
+
+        <h3>Redirect URL</h3>
+
+        NFT index:
+        <input id="s_index" type="number">
+        <br/>
+
+        NFT URI:
+        <input id="s_uri" type="text">
+        <br/>
+
+        <button id="s_button" type="submit">Sign transaction</button>
+
+
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+
+    <script type="module">
+
+        import { loadSetupPage } from './js/page-setup.js';
+
+        // On page load, setup wallet
+        window.addEventListener('load', async () => {
+            loadSetupPage();
+        });
+
+    </script>
+
+</body>
+</html>
+
+
