@@ -112,6 +112,51 @@ const abiBillboard = [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "_tokenData",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "image",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "city",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "redirectUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "adImage",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      },
+      {
+        "internalType": "string",
+        "name": "ownerName",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "to",
         "type": "address"
@@ -415,11 +460,52 @@ const abiBillboard = [
       },
       {
         "internalType": "string",
-        "name": "_tokenURI",
+        "name": "adImage",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "redirectUrl",
         "type": "string"
       }
     ],
-    "name": "setTokenURI",
+    "name": "setMetaData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "adImage",
+        "type": "string"
+      }
+    ],
+    "name": "setAdImage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "redirectUrl",
+        "type": "string"
+      }
+    ],
+    "name": "setRedirectUrl",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

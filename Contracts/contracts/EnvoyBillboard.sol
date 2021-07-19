@@ -26,7 +26,7 @@ contract EnvoyBillboard is ERC721, Ownable {
   //
 
   // MetaData map
-  mapping(uint256 => MetaData) private _tokenData;
+  mapping(uint256 => MetaData) public _tokenData;
 
 
 
@@ -64,18 +64,31 @@ contract EnvoyBillboard is ERC721, Ownable {
     return _tokenData[tokenId].adImage;
   }
 
-  function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
+  //
+  // ******************* SETTERS *******************
+  //
+
+  function setMetaData(uint256 tokenId, string memory adImage, string memory redirectUrl) public {
     require(_exists(tokenId), "URI set of nonexistent token");
     require(_msgSender() == ownerOf(tokenId), "Only owner can update URI");
 
-    _tokenURIs[tokenId] = _tokenURI;
+    _tokenData[tokenId].adImage = adImage;
+    _tokenData[tokenId].redirectUrl = redirectUrl;
   }
 
-  //
-  // ******************* METADATA *******************
-  //
+  function setAdImage(uint256 tokenId, string memory adImage) public {
+    require(_exists(tokenId), "URI set of nonexistent token");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update URI");
 
+    _tokenData[tokenId].adImage = adImage;
+  }
 
+  function setRedirectUrl(uint256 tokenId, string memory redirectUrl) public {
+    require(_exists(tokenId), "URI set of nonexistent token");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update URI");
+
+    _tokenData[tokenId].redirectUrl = redirectUrl;
+  }
 
 }
 

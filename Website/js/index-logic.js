@@ -30,14 +30,15 @@ async function setupPage() {
     connectWallet();
   });
 
-  $("#s_button").click(function () {
-    var index = document.getElementById("s_index").value;
-    var uri = document.getElementById("s_uri").value;
+  $("#f_button").click(function () {
+    var index = document.getElementById("f_index").value;
+    var adImage = document.getElementById("f_adImage").value;
+    var redirectUrl = document.getElementById("f_redirectUrl").value;
 
     // Smart contract call
-    contractBillboard.methods.setTokenURI(index, uri).send({ from: connectedWallet, }).then(function (r, e) {
+    contractBillboard.methods.setMetaData(index, adImage, redirectUrl).send({ from: connectedWallet, }).then(function (result, error) {
       console.log("Done");
-      console.log(r);
+      console.log(result);
     }).catch(function (error) {
       console.log("error:");
       console.log(error);
@@ -78,39 +79,48 @@ async function connectWallet() {
 // ********************* GRID *********************
 //
 
-
 function loadGrid() {
 
-  // Create list HTML
-  var listHtml = ""
+  // Create grid HTML
+  var gridHtml = ""
   for (var i = 0; i < 1000; i++) {
-
       var elementId = "sq-" + i;
-      listHtml += "<div id='" + elementId + "' ></div>";
+      gridHtml += "<div id='" + elementId + "' ></div>";
   }
-  $("#d_gridWrapper").html(listHtml);
+  $("#d_gridWrapper").html(gridHtml);
 
-  // Testing placeholders
+  // Load info for each cell
   for (var i = 0; i < 1000; i++) {
-    var imageHtml = "<a href='https://mcdonalds.be/'><img src='https://www.eatthis.com/wp-content/uploads/2019/02/mcdonalds-logo.jpg' style='width:100%;height:100%'/></a>"
-    $("#sq-" + i).html(imageHtml);
+    loadCell(i);
   }
 
+}
 
-  // Smart contract read call
-  contractBillboard.methods.tokenURI(0).call().then(function (r, e) {
+function loadCell(index) {
 
+  // Read contract data
+  contractBillboard.methods._tokenData(index).call().then(function (result, error) {
+
+    // Debug
     console.log("result: ");
-    console.log(r);
-
+    console.log(result);
     console.log("error: ");
-    console.log(e);
+    console.log(error);
 
-    var imageHtml = "<a href='https://mcdonalds.be/'><img src='https://www.eatthis.com/wp-content/uploads/2019/02/mcdonalds-logo.jpg' style='width:100%;height:100%'/></a>"
-    $("#sq-1").html(imageHtml);
+    // Data from response
+    var adImage = result["adImage"];
+    var redirectUrl = result["redirectUrl"];
+
+    // Default data
+    if (adImage == "") {
+      adImage = "https://www.envoy.art/wp-content/uploads/2021/07/envoylogo-trans.png";
+      redirectUrl = "https://www.envoy.art/";
+    }
+
+    // Add info to HTML
+    var imageHtml = "<a href='" + redirectUrl + "'><img src='" + adImage + "' style='width:100%;height:100%'/></a>"
+    $("#sq-" + index).html(imageHtml);
 
   });
 
 }
-
-
