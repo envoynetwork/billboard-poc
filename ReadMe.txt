@@ -1,27 +1,43 @@
+------------------------
+//    LOCAL SETUP   
+------------------------
 
+Truffle & Ganache
+- https://www.trufflesuite.com/
+- https://www.trufflesuite.com/ganache
 
-Ganache to set up local Ethereum blockchain
-- Import wallet in MetaMask using private key
+- Ganache to set up local Ethereum blockchain
+- Truffle to test and deploy contracts (local, testnet, mainnet)
 
-Truffle to manage deployments (local, ropsten, mainnet)
-
+Useful commands:
 - truffle test
 - truffle migrate --network development
 - truffle migrate --reset
 
+Start local webserver:
+php -S 127.0.0.1:8000
 
 
+------------------------
+//    SMART CONTRACT   
+------------------------
 
+- Openzeppelin
 
 ------------------------
 //    WEBSITE   
 ------------------------
 
-Run simple php server: php -S 127.0.0.1:8000
+
+------------------------
+//    TESTNET   
+------------------------
+
+- Ropsten testnet
 
 
 ------------------------
-//    Questions   
+//    OPEN QUESTIONS   
 ------------------------
 
 - NFT name + symbol

@@ -29,16 +29,6 @@ contract EnvoyBillboard is ERC721, Ownable {
   mapping(uint256 => MetaData) public _tokenData;
 
 
-
-  // URIs
-  mapping(uint256 => string) private _tokenURIs;
-
-  // Images
-  mapping(uint256 => string) private _tokenAdImages;
-
-
-
-
   //
   // ******************* SETUP *******************
   //
@@ -54,42 +44,65 @@ contract EnvoyBillboard is ERC721, Ownable {
               
   }
 
+
   //
   // ******************* ERC721 *******************
   //
 
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
-    require(_exists(tokenId), "URI query for nonexistent token");
+    require(_exists(tokenId), "Token does not exist");
 
     return _tokenData[tokenId].adImage;
   }
+
 
   //
   // ******************* SETTERS *******************
   //
 
-  function setMetaData(uint256 tokenId, string memory adImage, string memory redirectUrl) public {
-    require(_exists(tokenId), "URI set of nonexistent token");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update URI");
+  function setMetaData(
+      uint256 tokenId, 
+      string memory adImage, 
+      string memory redirectUrl, 
+      bool status,
+      string memory ownerName
+    ) public {
+
+    require(_exists(tokenId), "Token does not exist");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
     _tokenData[tokenId].adImage = adImage;
     _tokenData[tokenId].redirectUrl = redirectUrl;
+    _tokenData[tokenId].status = status;
+    _tokenData[tokenId].ownerName = ownerName;
   }
 
   function setAdImage(uint256 tokenId, string memory adImage) public {
-    require(_exists(tokenId), "URI set of nonexistent token");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update URI");
+    require(_exists(tokenId), "Token does not exist");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
     _tokenData[tokenId].adImage = adImage;
   }
 
   function setRedirectUrl(uint256 tokenId, string memory redirectUrl) public {
-    require(_exists(tokenId), "URI set of nonexistent token");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update URI");
+    require(_exists(tokenId), "Token does not exist");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
     _tokenData[tokenId].redirectUrl = redirectUrl;
   }
 
+  function setStatus(uint256 tokenId, bool status) public {
+    require(_exists(tokenId), "Token does not exist");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
+
+    _tokenData[tokenId].status = status;
+  }
+
+  function setOwnerName(uint256 tokenId, string memory ownerName) public {
+    require(_exists(tokenId), "Token does not exist");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
+
+    _tokenData[tokenId].ownerName = ownerName;
+  }
+
 }
-
-
