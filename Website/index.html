@@ -23,7 +23,7 @@
     <br />
 
     <!-- WALLET -->
-    <h2>Wallet</h2>
+    <h2>Connect wallet</h2>
     <div id="d_connectWallet" style="display: none;">
       <p>Connected wallet: <strong id="i_wallet_address">...</strong></p>
     </div>
@@ -32,21 +32,34 @@
 
     <!-- SETTERS -->
     <div id="d_setters" style="display: none;">
+
+      <!-- MINT -->
+      <h2>Mint token</h2>
+      NFT index: <input id="fm_index" type="number"><br/>
+      <button id="fm_mintToken">Mint token</button>
+      <br /><br />
+
       <h2>NFT settings</h2>
 
-      NFT index:
-      <input id="f_index" type="number">
-      <br />
+      <!-- GET INFO -->
+      <h3>Get NFT info</h3>
+      NFT index: <input id="fg_index" type="number"><br/>
+      <button id="fg_getInfo" type="submit">Get token info</button>
+      <div id="fg_showInfo"></div>
 
-      Ad Image:
-      <input id="f_adImage" type="text">
-      <br />
+      <!-- SET INFO -->
+      <h3>Set NFT info</h3>
+      NFT index: <input id="f_index" type="number"><br/>
+      Ad Image: <input id="f_adImage" type="text"><br/>
+      Redirect URL: <input id="f_redirectUrl" type="text"><br/>
+      Status:
+      <select name="f_status" id="f_status">
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select><br/>
+      Owner name: <input id="f_ownerName" type="text"><br/>
+      <button id="f_setInfo" type="submit">Sign transaction</button>
 
-      Redirect URL:
-      <input id="f_redirectUrl" type="text">
-      <br />
-
-      <button id="f_button" type="submit">Sign transaction</button>
     </div>
 
     <!-- JS LIBS -->

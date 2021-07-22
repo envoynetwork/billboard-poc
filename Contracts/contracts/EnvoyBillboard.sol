@@ -28,6 +28,11 @@ contract EnvoyBillboard is ERC721, Ownable {
   // MetaData map
   mapping(uint256 => MetaData) public _tokenData;
 
+  // Contract owner
+  address private _contractOwner = address(0);
+
+  // Contract minter
+  address private _contractMinter = address(0);
 
   //
   // ******************* SETUP *******************
@@ -36,14 +41,63 @@ contract EnvoyBillboard is ERC721, Ownable {
   // Constructor
   constructor (string memory name, string memory symbol) public ERC721(name, symbol) {
 
-    // Mint needed tokens (1000 is too much, too high gas fee)
-    // Need "mint" method for external partner
-    for (uint256 i=0; i < 100; i++) {
-      _safeMint(_msgSender(), i);
-    }
-              
+    // Initially the deployer is the owner
+    _contractOwner = _msgSender();
+    _contractMinter = _msgSender();
   }
 
+  //
+  // ******************* OWNERSHIP *******************
+  //
+
+  function updateContractOwner(address owner) public {
+    require(_msgSender() == _contractOwner, "Only owner can transfer ownership");
+
+    _contractOwner = owner; 
+  }
+
+  function updateContractMinter(address minter) public {
+    require(_msgSender() == _contractOwner, "Only owner can update contract minter");
+
+    _contractMinter = minter;
+  }
+
+  //
+  // ******************* MINT *******************
+  //
+
+  function mintToken(
+      uint256 tokenId, 
+      string memory image, 
+      string memory city
+    ) public {
+      
+    require(!_exists(tokenId), "Token already exists");
+    require(_msgSender() == _contractMinter, "Only minter address can mint");
+
+    // Minted token will be send to minter address
+    _safeMint(_contractMinter, tokenId);
+
+    // Update hardcoded metadata
+    _tokenData[tokenId].image = image;
+    _tokenData[tokenId].city = city;
+  }
+
+  function mintTokenWithData(
+      uint256 tokenId, 
+      string memory image, 
+      string memory city, 
+      string memory adImage, 
+      string memory redirectUrl, 
+      bool status,
+      string memory ownerName
+    ) public {
+
+    mintToken(tokenId, image, city);
+      
+    // Update editable metadata
+    setMetaData(tokenId, adImage, redirectUrl, status, ownerName);
+  }
 
   //
   // ******************* ERC721 *******************
