@@ -26,6 +26,7 @@
     <h2>Connect wallet</h2>
     <div id="d_connectWallet" style="display: none;">
       <p>Connected wallet: <strong id="i_wallet_address">...</strong></p>
+      <p>On network: <strong id="i_network_name">...</strong></p>
     </div>
     <button id="b_connectWallet">Connect wallet</button>
     <br />
@@ -33,9 +34,19 @@
     <!-- SETTERS -->
     <div id="d_setters" style="display: none;">
 
+      <!-- ACCESS -->
+      <h2>Set contract owner</h2>
+      Owner address: <input id="a_owner" type="text"><br/>
+      <button id="a_setOwner">Update contract owner</button>
+      <br /><br />
+      <h2>Set minter</h2>
+      Minter address: <input id="a_minter" type="text"><br/>
+      <button id="a_setMinter">Update minter</button>
+      <br /><br />
+
       <!-- MINT -->
       <h2>Mint token</h2>
-      NFT index: <input id="fm_index" type="number"><br/>
+      NFT slot: <input id="fm_slot" type="number"><br/>
       <button id="fm_mintToken">Mint token</button>
       <br /><br />
 
@@ -43,13 +54,13 @@
 
       <!-- GET INFO -->
       <h3>Get NFT info</h3>
-      NFT index: <input id="fg_index" type="number"><br/>
+      NFT slot: <input id="fg_slot" type="number"><br/>
       <button id="fg_getInfo" type="submit">Get token info</button>
       <div id="fg_showInfo"></div>
 
       <!-- SET INFO -->
       <h3>Set NFT info</h3>
-      NFT index: <input id="f_index" type="number"><br/>
+      NFT slot: <input id="f_slot" type="number"><br/>
       Ad Image: <input id="f_adImage" type="text"><br/>
       Redirect URL: <input id="f_redirectUrl" type="text"><br/>
       Status:
