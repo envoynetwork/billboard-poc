@@ -13,6 +13,7 @@ contract EnvoyBillboard is ERC721, Ownable {
   //
 
   struct MetaData {
+    uint256 tokenId;
     string image;
     string city;
     string redirectUrl;
@@ -26,7 +27,13 @@ contract EnvoyBillboard is ERC721, Ownable {
   //
 
   // MetaData map
-  mapping(uint256 => MetaData) public _tokenData;
+  mapping(uint256 => mapping(string => MetaData)) public _tokenData;
+
+  // Default ERC721 image
+  mapping(uint256 => string) public _tokenImage;
+
+  // Total tokens
+  uint256 private _totalSupply = 0;
 
   // Contract owner
   address private _contractOwner = address(0);
@@ -67,24 +74,34 @@ contract EnvoyBillboard is ERC721, Ownable {
   //
 
   function mintToken(
-      uint256 tokenId, 
+      uint256 boardId,
+      string memory slot,
       string memory image, 
       string memory city
     ) public {
-      
-    require(!_exists(tokenId), "Token already exists");
+
     require(_msgSender() == _contractMinter, "Only minter address can mint");
+    require(bytes(_tokenData[boardId][slot].image).length == 0, "Token already exists");
 
     // Minted token will be send to minter address
+    uint256 tokenId = _totalSupply;
     _safeMint(_contractMinter, tokenId);
+    _totalSupply += 1;
+
+    // Set tokenId
+    _tokenData[boardId][slot].tokenId = tokenId;
 
     // Update hardcoded metadata
-    _tokenData[tokenId].image = image;
-    _tokenData[tokenId].city = city;
+    _tokenData[boardId][slot].image = image;
+    _tokenData[boardId][slot].city = city;
+
+    // ERC721 image
+    _tokenImage[tokenId] = image;
   }
 
   function mintTokenWithData(
-      uint256 tokenId, 
+      uint256 boardId,
+      string memory slot,
       string memory image, 
       string memory city, 
       string memory adImage, 
@@ -93,10 +110,11 @@ contract EnvoyBillboard is ERC721, Ownable {
       string memory ownerName
     ) public {
 
-    mintToken(tokenId, image, city);
+    // Mint token
+    mintToken(boardId, slot, image, city);
       
     // Update editable metadata
-    setMetaData(tokenId, adImage, redirectUrl, status, ownerName);
+    setMetaData(boardId, slot, adImage, redirectUrl, status, ownerName);
   }
 
   //
@@ -106,7 +124,7 @@ contract EnvoyBillboard is ERC721, Ownable {
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "Token does not exist");
 
-    return _tokenData[tokenId].adImage;
+    return _tokenImage[tokenId];
   }
 
 
@@ -115,48 +133,59 @@ contract EnvoyBillboard is ERC721, Ownable {
   //
 
   function setMetaData(
-      uint256 tokenId, 
+      uint256 boardId,
+      string memory slot, 
       string memory adImage, 
       string memory redirectUrl, 
       bool status,
       string memory ownerName
     ) public {
 
+    uint256 tokenId = _tokenData[boardId][slot].tokenId;
+
     require(_exists(tokenId), "Token does not exist");
     require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
-    _tokenData[tokenId].adImage = adImage;
-    _tokenData[tokenId].redirectUrl = redirectUrl;
-    _tokenData[tokenId].status = status;
-    _tokenData[tokenId].ownerName = ownerName;
+    _tokenData[boardId][slot].adImage = adImage;
+    _tokenData[boardId][slot].redirectUrl = redirectUrl;
+    _tokenData[boardId][slot].status = status;
+    _tokenData[boardId][slot].ownerName = ownerName;
   }
 
-  function setAdImage(uint256 tokenId, string memory adImage) public {
+  function setAdImage(uint256 boardId, string memory slot, string memory adImage) public {
+    uint256 tokenId = _tokenData[boardId][slot].tokenId;
+
     require(_exists(tokenId), "Token does not exist");
     require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
-    _tokenData[tokenId].adImage = adImage;
+    _tokenData[boardId][slot].adImage = adImage;
   }
 
-  function setRedirectUrl(uint256 tokenId, string memory redirectUrl) public {
+  function setRedirectUrl(uint256 boardId, string memory slot, string memory redirectUrl) public {
+    uint256 tokenId = _tokenData[boardId][slot].tokenId;
+
     require(_exists(tokenId), "Token does not exist");
     require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
-    _tokenData[tokenId].redirectUrl = redirectUrl;
+    _tokenData[boardId][slot].redirectUrl = redirectUrl;
   }
 
-  function setStatus(uint256 tokenId, bool status) public {
+  function setStatus(uint256 boardId, string memory slot, bool status) public {
+    uint256 tokenId = _tokenData[boardId][slot].tokenId;
+
     require(_exists(tokenId), "Token does not exist");
     require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
-    _tokenData[tokenId].status = status;
+    _tokenData[boardId][slot].status = status;
   }
 
-  function setOwnerName(uint256 tokenId, string memory ownerName) public {
+  function setOwnerName(uint256 boardId, string memory slot, string memory ownerName) public {
+    uint256 tokenId = _tokenData[boardId][slot].tokenId;
+
     require(_exists(tokenId), "Token does not exist");
     require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
-    _tokenData[tokenId].ownerName = ownerName;
+    _tokenData[boardId][slot].ownerName = ownerName;
   }
 
 }

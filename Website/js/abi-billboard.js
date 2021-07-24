@@ -115,10 +115,20 @@ const abiBillboard = [
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
     "name": "_tokenData",
     "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
       {
         "internalType": "string",
         "name": "image",
@@ -147,6 +157,26 @@ const abiBillboard = [
       {
         "internalType": "string",
         "name": "ownerName",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "_tokenImage",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
         "type": "string"
       }
     ],
@@ -461,8 +491,13 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "boardId",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "slot",
+        "type": "string"
       },
       {
         "internalType": "string",
@@ -484,8 +519,13 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "boardId",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "slot",
+        "type": "string"
       },
       {
         "internalType": "string",
@@ -547,8 +587,13 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "boardId",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "slot",
+        "type": "string"
       },
       {
         "internalType": "string",
@@ -580,8 +625,13 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "boardId",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "slot",
+        "type": "string"
       },
       {
         "internalType": "string",
@@ -598,8 +648,13 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "boardId",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "slot",
+        "type": "string"
       },
       {
         "internalType": "string",
@@ -616,8 +671,13 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "boardId",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "slot",
+        "type": "string"
       },
       {
         "internalType": "bool",
@@ -634,8 +694,13 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "boardId",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "slot",
+        "type": "string"
       },
       {
         "internalType": "string",
