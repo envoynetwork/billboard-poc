@@ -5,58 +5,56 @@
 Using "Openzeppelin" to make sure the ERC721 standard is respected.
 https://openzeppelin.com/
 
-
+Access rights:
+- Contract owner will be able to update contract and minter addresses
+- Minter address will be able to mint new tokens and becomes token owner
 
 ------------------------
 //    WEBSITE   
 ------------------------
 
+- Using "web3" library.
+- Network and contract address can be set up in "settings.js"
+- In the example code slot numbers are 0-999, but it can be any string
+
+Start local webserver:
+- $ php -S 127.0.0.1:8000
+
 
 ------------------------
-//    LOCAL SETUP   
+//    LOCAL   
 ------------------------
 
 Truffle & Ganache
 - https://www.trufflesuite.com/
 - https://www.trufflesuite.com/ganache
-
 - Ganache to set up local Ethereum blockchain
 - Truffle to test and deploy contracts (local, testnet, mainnet)
 
-Useful commands:
-- truffle test
-- truffle migrate --network development
-- truffle migrate --reset
+Install HDWallet-Provider to be able to deploy to testnet and mainnet:
+- npm install @truffle/hdwallet-provider
 
-Start local webserver:
-php -S 127.0.0.1:8000
+Excluded files:
+- .secret = private key for deployer wallet
+- .infuraKey = Infura API key
+
+Useful commands:
+- $ truffle test
+- $ truffle migrate --network development
+- $ truffle migrate --reset
+
 
 ------------------------
 //    TESTNET   
 ------------------------
 
-- Ropsten testnet
-- Address
-- Faucet
-- Infura
+- Goerli testnet (is already included in MetaMask)
+- Get ETH on testnet: https://app.mycrypto.com/faucet
+- Use Infura (infura.io) to connect to an Ethereum node
 
 ------------------------
 //    MAINNET   
 ------------------------
 
-- Need ETH node access (infura.io)
-- Contract address: xxxx
-- Owner address: xxxx
-- Minter address: xxxx
+- Use Infura (infura.io) to connect to an Ethereum node
 
-------------------------
-//    OPEN QUESTIONS   
-------------------------
-
-- NFT name + symbol
-- Is "slot" needed? Every NFT has a unique index by default
-- Is "delegate" needed? Every NFT has "ownerOf" by default
-- Do we want to prevent minting over 1000 tokens?
-
-External partner:
-- The contract owner can now set an address which is able to mint. Ok?
