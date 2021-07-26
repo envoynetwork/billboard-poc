@@ -78,15 +78,35 @@ async function setupPage() {
     var status = document.getElementById("f_status").value;
     var ownerName = document.getElementById("f_ownerName").value;
 
-    // Smart contract call
-    contractBillboard.methods.setMetaData(0, slot, adImage, redirectUrl, status, ownerName)
-    .send({ from: connectedWallet, }).then(function (result, error) {
-      console.log("Done");
-      console.log(result);
-    }).catch(function (error) {
-      console.log("error:");
-      console.log(error);
+    // Check if current wallet is owner of NFT
+    // This needs to be done using the tokenID as it's part of the NFT standard
+    // So first we need to get the tokenID from the metadata
+    contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
+      // Now we can check the owner of the tokenID
+      contractBillboardReadOnly.methods.ownerOf(result["tokenId"]).call().then(function (result, error) {
+        // If the result (= owner wallet address) is the current wallet, we can proceed
+
+        console.log("result: " + result);
+        console.log("connectedWallet: " + connectedWallet);
+
+        if (connectedWallet.toLowerCase() == result.toLowerCase()) {
+          
+          // Smart contract call to update data
+          contractBillboard.methods.setMetaData(0, slot, adImage, redirectUrl, status, ownerName)
+          .send({ from: connectedWallet, }).then(function (result, error) {
+            console.log("Done");
+            console.log(result);
+          }).catch(function (error) {
+            console.log("error:");
+            console.log(error);
+          });
+
+        } else {
+          alert("Only the NFT owner can update metadata");
+        }
+      });
     });
+    
   });
 
   // Update owner
