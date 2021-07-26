@@ -108,7 +108,7 @@ async function setupPage() {
     var address = document.getElementById("a_minter").value;
 
     // Smart contract call
-    contractBillboard.methods.updateContractOwner(address).send({ from: connectedWallet, }).then(function (result, error) {
+    contractBillboard.methods.updateContractMinter(address).send({ from: connectedWallet, }).then(function (result, error) {
       console.log("Update result:");
       console.log(result);
     }).catch(function (error) {
