@@ -189,17 +189,29 @@ function loadGrid() {
 
   // Create grid HTML
   var gridHtml = ""
-  for (var i = 0; i < 1000; i++) {
+  for (var i = 0; i < 1040; i++) {
       var elementId = "sq-" + i;
       gridHtml += "<div id='" + elementId + "' ></div>";
   }
   $("#d_gridWrapper").html(gridHtml);
 
   // Load info for each cell
-  for (var i = 0; i < 1000; i++) {
+  for (var i = 0; i < 1040; i++) {
     loadCell(i.toString());
   }
 
+}
+
+function getSlotNames() {
+  var slotNames = [];
+  var rows = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+  rows.forEach(function(row) {    
+    for(let i=1; i <= 40; i++) {
+      var col = String(i).padStart(2, '0');
+      slotNames.push(row + col);
+    }
+  });
+  return slotNames;
 }
 
 function loadCell(slot) {
@@ -214,8 +226,12 @@ function loadCell(slot) {
     console.log(error);
 
     // Data from response
+    var owner = result["ownerName"] || 'nobody';
     var adImage = result["adImage"];
     var redirectUrl = result["redirectUrl"];
+    var slotName = getSlotNames()[slot];
+
+    console.log("SLOT", slotName);
 
     // Default data
     if (adImage == "") {
@@ -224,7 +240,7 @@ function loadCell(slot) {
     }
 
     // Add info to HTML
-    var imageHtml = "<a href='" + redirectUrl + "' target='_blank'><img src='" + adImage + "' style='width:100%;height:100%'/></a>"
+    var imageHtml = "<a title='Slot " + slotName + " - owned by " + owner + "' href='" + redirectUrl + "' target='_blank'><img width='24' height='24' alt='Slot " + slotName + " - owned by " + owner + "' src='" + adImage + "' style='width:100%;height:100%'/></a>"
     $("#sq-" + slot).html(imageHtml);
 
   });
