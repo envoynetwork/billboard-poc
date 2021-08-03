@@ -243,6 +243,18 @@ function loadCell(slot) {
     var imageHtml = "<a title='Slot " + slotName + " - owned by " + owner + "' href='" + redirectUrl + "' target='_blank'><img width='24' height='24' alt='Slot " + slotName + " - owned by " + owner + "' src='" + adImage + "' style='width:100%;height:100%'/></a>"
     $("#sq-" + slot).html(imageHtml);
 
-  });
 
+    $("#sq-" + slot).click(function (){
+
+      contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
+        contractBillboardReadOnly.methods.ownerOf(result["tokenId"]).call().then(function (result, error) {
+
+          if(connectedWallet.toLowerCase() == result.toLowerCase()) {
+            alert("THIS IS MY SLOT, EDIT IT OR WHAT");
+          }
+        });
+
+      });
+    });
+  });
 }
