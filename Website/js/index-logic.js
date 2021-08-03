@@ -10,6 +10,8 @@ const contractBillboard = new web3.eth.Contract(abiBillboard, billboardAddress);
 const web3ReadOnly = new Web3(webProvider);
 const contractBillboardReadOnly = new web3ReadOnly.eth.Contract(abiBillboard, billboardAddress);
 
+const TOTAL_SLOTS = 1040;
+
 var connectedWallet;
 
 //
@@ -142,6 +144,38 @@ async function setupPage() {
 }
 
 //
+// ********************* SLOTS *********************
+//
+
+function getSlotNames() {
+  var slotNames = [];
+  var rows = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+  rows.forEach(function(row) {    
+    for(let i=1; i <= 40; i++) {
+      var col = String(i).padStart(2, '0');
+      slotNames.push(row + col);
+    }
+  });
+  return slotNames;
+}
+
+function getMySlots() {
+  var mySlots = []
+  for(let slot=0; slot < TOTAL_SLOTS; slot++) {
+    contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
+      contractBillboardReadOnly.methods.ownerOf(result["tokenId"]).call().then(function (result, error) {
+        if(result && (connectedWallet.toLowerCase() == result.toLowerCase())) {
+          var mySlot = [getSlotNames()[slot], slot]
+          mySlots.push(mySlot)
+          console.log('Added to my slots:', mySlot)
+        }
+      });
+    });
+  }
+  return mySlots;
+}
+
+//
 // ********************* SETUP WALLET *********************
 //
 
@@ -171,6 +205,10 @@ async function connectWallet() {
 
     var blockSetters = document.getElementById("d_setters");
     blockSetters.style.display = "";
+
+    // Get My Slots
+    var mySlots = getMySlots()
+    console.log(mySlots);
     
   } catch (error) {
     if (error.code === 4001) {
@@ -189,29 +227,16 @@ function loadGrid() {
 
   // Create grid HTML
   var gridHtml = ""
-  for (var i = 0; i < 1040; i++) {
+  for (var i = 0; i < TOTAL_SLOTS; i++) {
       var elementId = "sq-" + i;
       gridHtml += "<div id='" + elementId + "' ></div>";
   }
   $("#d_gridWrapper").html(gridHtml);
 
   // Load info for each cell
-  for (var i = 0; i < 1040; i++) {
+  for (var i = 0; i < TOTAL_SLOTS; i++) {
     loadCell(i.toString());
   }
-
-}
-
-function getSlotNames() {
-  var slotNames = [];
-  var rows = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  rows.forEach(function(row) {    
-    for(let i=1; i <= 40; i++) {
-      var col = String(i).padStart(2, '0');
-      slotNames.push(row + col);
-    }
-  });
-  return slotNames;
 }
 
 function loadCell(slot) {
@@ -252,9 +277,10 @@ function loadCell(slot) {
           if(connectedWallet.toLowerCase() == result.toLowerCase()) {
             alert("THIS IS MY SLOT, EDIT IT OR WHAT");
           }
-        });
 
+        });
       });
+
     });
   });
 }
