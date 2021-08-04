@@ -12,6 +12,7 @@ const contractBillboardReadOnly = new web3ReadOnly.eth.Contract(abiBillboard, bi
 
 const TOTAL_SLOTS = 1040;
 
+var mySlots = [];
 var connectedWallet;
 
 //
@@ -139,7 +140,7 @@ async function setupPage() {
     });
   });
 
-  // Load grid
+  // Load initial grid
   loadGrid();
 }
 
@@ -157,22 +158,6 @@ function getSlotNames() {
     }
   });
   return slotNames;
-}
-
-function getMySlots() {
-  var mySlots = []
-  for(let slot=0; slot < TOTAL_SLOTS; slot++) {
-    contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
-      contractBillboardReadOnly.methods.ownerOf(result["tokenId"]).call().then(function (result, error) {
-        if(result && (connectedWallet.toLowerCase() == result.toLowerCase())) {
-          var mySlot = [getSlotNames()[slot], slot]
-          mySlots.push(mySlot)
-          console.log('Added to my slots:', mySlot)
-        }
-      });
-    });
-  }
-  return mySlots;
 }
 
 //
@@ -206,9 +191,10 @@ async function connectWallet() {
     var blockSetters = document.getElementById("d_setters");
     blockSetters.style.display = "";
 
-    // Get My Slots
-    var mySlots = getMySlots()
-    console.log(mySlots);
+
+    // Reload grid to get my slots
+    loadGrid();
+
     
   } catch (error) {
     if (error.code === 4001) {
@@ -245,18 +231,16 @@ function loadCell(slot) {
   contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
 
     // Debug
-    console.log("result: ");
-    console.log(result);
-    console.log("error: ");
-    console.log(error);
+    //console.log("result: ");
+    //console.log(result);
+    //console.log("error: ");
+    //console.log(error);
 
     // Data from response
     var owner = result["ownerName"] || 'nobody';
     var adImage = result["adImage"];
     var redirectUrl = result["redirectUrl"];
     var slotName = getSlotNames()[slot];
-
-    console.log("SLOT", slotName);
 
     // Default data
     if (adImage == "") {
@@ -268,19 +252,16 @@ function loadCell(slot) {
     var imageHtml = "<a title='Slot " + slotName + " - owned by " + owner + "' href='" + redirectUrl + "' target='_blank'><img width='24' height='24' alt='Slot " + slotName + " - owned by " + owner + "' src='" + adImage + "' style='width:100%;height:100%'/></a>"
     $("#sq-" + slot).html(imageHtml);
 
-
-    $("#sq-" + slot).click(function (){
-
+    if(connectedWallet) {
       contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
         contractBillboardReadOnly.methods.ownerOf(result["tokenId"]).call().then(function (result, error) {
-
           if(connectedWallet.toLowerCase() == result.toLowerCase()) {
-            alert("THIS IS MY SLOT, EDIT IT OR WHAT");
+            mySlots.push(slot)
+            $("#i_myslots").html(mySlots.join());
           }
-
         });
       });
+    }
 
-    });
   });
 }
