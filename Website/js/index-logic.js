@@ -49,6 +49,20 @@ async function setupPage() {
     });
   });
 
+  // Set URI
+  $("#tu_setUri").click(function () {
+    var baseUri = document.getElementById("tu_uri").value;
+
+    // Smart contract call
+    contractBillboard.methods.setBaseTokenURI(baseUri).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("URI result:");
+      console.log(result);
+    }).catch(function (error) {
+      console.log("URI error:");
+      console.log(error);
+    });
+  });
+
   // Get metadata button
   $("#fg_getInfo").click(function () {
     var slot = document.getElementById("fg_slot").value;
@@ -56,20 +70,23 @@ async function setupPage() {
     // Get info from contract
     contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
 
-      // Info from result
-      var adImage = result["adImage"];
-      var redirectUrl = result["redirectUrl"];
-      var status = result["status"];
-      var ownerName = result["ownerName"];
+      contractBillboardReadOnly.methods.tokenURI(slot).call().then(function (resultUri, error) {
+        // Info from result
+        var adImage = result["adImage"];
+        var redirectUrl = result["redirectUrl"];
+        var status = result["status"];
+        var ownerName = result["ownerName"];
 
-      // HTML
-      var resultHtml = "<br/>";
-      resultHtml += "<b>adImage:</b> " + adImage + "<br/>";
-      resultHtml += "<b>redirectUrl:</b> " + redirectUrl + "<br/>";
-      resultHtml += "<b>status:</b> " + status + "<br/>";
-      resultHtml += "<b>ownerName:</b> " + ownerName + "<br/>";
-      resultHtml += "<br/>";
-      $("#fg_showInfo").html(resultHtml);
+        // HTML
+        var resultHtml = "<br/>";
+        resultHtml += "<b>adImage:</b> " + adImage + "<br/>";
+        resultHtml += "<b>redirectUrl:</b> " + redirectUrl + "<br/>";
+        resultHtml += "<b>status:</b> " + status + "<br/>";
+        resultHtml += "<b>ownerName:</b> " + ownerName + "<br/>";
+        resultHtml += "<b>token URI (JSON):</b> " + resultUri + "<br/>";
+        resultHtml += "<br/>";
+        $("#fg_showInfo").html(resultHtml);
+      });
     });
   });
 
@@ -191,10 +208,8 @@ async function connectWallet() {
     var blockSetters = document.getElementById("d_setters");
     blockSetters.style.display = "";
 
-
     // Reload grid to get my slots
     loadGrid();
-
     
   } catch (error) {
     if (error.code === 4001) {
