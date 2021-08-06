@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/math/SafeMath.sol";
 
-contract EnvoyBillboard is ERC721, Ownable {
+contract Decentraboard is ERC721, Ownable {
 
   using SafeMath for uint256;
   using Strings for uint256;

@@ -1,6 +1,6 @@
 const truffleAssert = require('truffle-assertions');
 
-const EnvoyBillboard = artifacts.require("EnvoyBillboard");
+const Decentraboard = artifacts.require("Decentraboard");
 
 //
 // ******************* GETTERS/SETTERS *******************
@@ -11,7 +11,7 @@ contract("Owner can update metadata", function(accounts) {
 
     // Const
     const ownerAddress = accounts[0];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
 
     // Loop to create tokens
     for (let index = 0; index < 10; index++) {
@@ -30,7 +30,7 @@ contract("Owner can update metadata", function(accounts) {
 
     // Const
     const ownerAddress = accounts[0];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
 
     let resultSetBaseUri = await BillboardInstance.setBaseTokenURI(
       "https://decentraboard.com/token/",
@@ -43,7 +43,7 @@ contract("Owner can update metadata", function(accounts) {
 
     // Const
     const ownerAddress = accounts[0];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Set metadata
     var resultSetMetaData = await BillboardInstance.setMetaData(
@@ -93,7 +93,7 @@ contract("Owner can update metadata", function(accounts) {
 
     // Const
     const ownerAddress = accounts[0];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Set metadata
     let resultAdImage = await BillboardInstance.setAdImage(
@@ -144,7 +144,7 @@ contract("Owner can update metadata", function(accounts) {
 
     // Const
     const userAddress = accounts[1];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Set metadata
     await truffleAssert.reverts(
@@ -213,7 +213,7 @@ contract("Owner can transfer token", function(accounts) {
 
     // Const
     const ownerAddress = accounts[0];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
 
     // Loop to create tokens
     for (let index = 0; index < 10; index++) {
@@ -233,7 +233,7 @@ contract("Owner can transfer token", function(accounts) {
     // Const
     const ownerAddress = accounts[0];
     const userAddress = accounts[1];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Transfer
     await BillboardInstance.transferFrom(ownerAddress, userAddress, 1, {from: ownerAddress});
@@ -258,7 +258,7 @@ contract("Update contract owner and minter address", function(accounts) {
     // Const
     const ownerAddress = accounts[0];
     const userAddress = accounts[1];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Update minter
     let resultSetMinter = await BillboardInstance.updateContractMinter(userAddress, {from: ownerAddress});
@@ -277,7 +277,7 @@ contract("Only owner can transfer ownership and upate minter", function(accounts
 
     // Const
     const userAddress = accounts[1];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Update minter
     await truffleAssert.reverts(
@@ -300,7 +300,7 @@ contract("Only owner can update base URI", function(accounts) {
 
     // Const
     const userAddress = accounts[1];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
 
     // Update base URI
     await truffleAssert.reverts(
@@ -324,7 +324,7 @@ contract("Mint new tokens", function(accounts) {
     // Const
     const ownerAddress = accounts[0];
     const userAddress = accounts[1];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Update minter
     let resultSetMinter = await BillboardInstance.updateContractMinter(userAddress, {from: ownerAddress});
@@ -373,7 +373,7 @@ contract("Mint new tokens", function(accounts) {
 
     // Const
     const userAddress = accounts[1];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Mint
     await truffleAssert.reverts(
@@ -435,7 +435,7 @@ contract("Mint new tokens access right", function(accounts) {
 
     // Const
     const userAddress = accounts[1];
-    const BillboardInstance = await EnvoyBillboard.deployed();
+    const BillboardInstance = await Decentraboard.deployed();
   
     // Mint
     await truffleAssert.reverts(

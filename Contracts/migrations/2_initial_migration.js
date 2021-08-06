@@ -1,5 +1,5 @@
-const EnvoyBillboard = artifacts.require("EnvoyBillboard"); 
+const Decentraboard = artifacts.require("Decentraboard"); 
 
 module.exports = function(deployer) {
-	deployer.deploy(EnvoyBillboard, "Envoy Billboard", "BOARD");
+	deployer.deploy(Decentraboard, "Decentraboard", "BOARD");
 };
