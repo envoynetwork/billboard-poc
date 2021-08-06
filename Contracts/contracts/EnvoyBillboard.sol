@@ -7,6 +7,7 @@ import "openzeppelin-solidity/contracts/utils/math/SafeMath.sol";
 contract EnvoyBillboard is ERC721, Ownable {
 
   using SafeMath for uint256;
+  using Strings for uint256;
 
   //
   // ******************* METADATA STRUCT *******************
@@ -29,8 +30,8 @@ contract EnvoyBillboard is ERC721, Ownable {
   // MetaData map
   mapping(uint256 => mapping(string => MetaData)) public _tokenData;
 
-  // Default ERC721 image
-  mapping(uint256 => string) public _tokenImage;
+  // Base URI
+  string private _baseTokenURI = "";
 
   // Total tokens
   uint256 private _totalSupply = 0;
@@ -94,9 +95,6 @@ contract EnvoyBillboard is ERC721, Ownable {
     // Update hardcoded metadata
     _tokenData[boardId][slot].image = image;
     _tokenData[boardId][slot].city = city;
-
-    // ERC721 image
-    _tokenImage[tokenId] = image;
   }
 
   function mintTokenWithData(
@@ -124,7 +122,13 @@ contract EnvoyBillboard is ERC721, Ownable {
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "Token does not exist");
 
-    return _tokenImage[tokenId];
+    return string(abi.encodePacked(_baseTokenURI, tokenId.toString()));
+  }
+
+  function setBaseTokenURI(string memory baseTokenURI) public {
+    require(_msgSender() == _contractOwner, "Only owner can update base URI");
+
+    _baseTokenURI = baseTokenURI;
   }
 
 

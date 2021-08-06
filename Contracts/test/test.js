@@ -26,6 +26,19 @@ contract("Owner can update metadata", function(accounts) {
     }
   });
 
+  before("Set base URI", async function () {
+
+    // Const
+    const ownerAddress = accounts[0];
+    const BillboardInstance = await EnvoyBillboard.deployed();
+
+    let resultSetBaseUri = await BillboardInstance.setBaseTokenURI(
+      "https://decentraboard.com/token/",
+      {from: ownerAddress}
+    );
+    assert.equal(resultSetBaseUri.receipt.status, true, "Transaction should succeed");
+  });
+
   it("Owner should be able to set all metadata at once", async () => {
 
     // Const
@@ -57,10 +70,10 @@ contract("Owner can update metadata", function(accounts) {
 
     // Get ERC721 token URI
     var resultGetTokenUri = await BillboardInstance.tokenURI(1);
-    assert.equal(resultGetTokenUri, "imageParam1", "Wrong ERC721 token URI");
+    assert.equal(resultGetTokenUri, "https://decentraboard.com/token/1", "Wrong ERC721 token URI");
 
     resultGetTokenUri = await BillboardInstance.tokenURI(2);
-    assert.equal(resultGetTokenUri, "imageParam2", "Wrong ERC721 token URI");
+    assert.equal(resultGetTokenUri, "https://decentraboard.com/token/2", "Wrong ERC721 token URI");
 
     // Get all metadata
     var resultGetData = await BillboardInstance._tokenData(0, "1");
@@ -117,7 +130,7 @@ contract("Owner can update metadata", function(accounts) {
 
     // Get ERC721 token URI
     let resultGetTokenUri = await BillboardInstance.tokenURI(1);
-    assert.equal(resultGetTokenUri, "imageParam1", "Wrong ERC721 token URI");
+    assert.equal(resultGetTokenUri, "https://decentraboard.com/token/1", "Wrong ERC721 token URI");
 
     // Get all metadata
     let resultGetData = await BillboardInstance._tokenData(0, "1");
@@ -281,6 +294,25 @@ contract("Only owner can transfer ownership and upate minter", function(accounts
 
 });
 
+contract("Only owner can update base URI", function(accounts) {
+
+  it("Should not be possible for usser to update base URI", async () => {
+
+    // Const
+    const userAddress = accounts[1];
+    const BillboardInstance = await EnvoyBillboard.deployed();
+
+    // Update base URI
+    await truffleAssert.reverts(
+      BillboardInstance.setBaseTokenURI(
+        "https://decentraboard.com/token/",
+        {from: userAddress}
+      ),
+      "Only owner can update base URI"
+    );
+  });
+
+});
 
 //
 // ******************* MINTING *******************
