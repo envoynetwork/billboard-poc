@@ -49,6 +49,32 @@ async function setupPage() {
     });
   });
 
+  // Mint with metadata button
+  $("#mwm_mintToken").click(function () {
+    var slot = document.getElementById("mwm_slot").value;
+    var adImage = document.getElementById("mwm_adImage").value;
+    var redirectUrl = document.getElementById("mwm_redirectUrl").value;
+    var status = document.getElementById("mwm_status").value;
+    var ownerName = document.getElementById("mwm_ownerName").value;
+    // Smart contract call
+    contractBillboard.methods.mintTokenWithData(
+      0, 
+      slot, 
+      "imageValue", 
+      "cityValue",
+      adImage,
+      redirectUrl,
+      status,
+      ownerName
+    ).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("Mint result:");
+      console.log(result);
+    }).catch(function (error) {
+      console.log("Mint error:");
+      console.log(error);
+    });
+  });
+  
   // Set URI
   $("#tu_setUri").click(function () {
     var baseUri = document.getElementById("tu_uri").value;
@@ -70,12 +96,14 @@ async function setupPage() {
     // Get info from contract
     contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
 
-      contractBillboardReadOnly.methods.tokenURI(slot).call().then(function (resultUri, error) {
-        // Info from result
-        var adImage = result["adImage"];
-        var redirectUrl = result["redirectUrl"];
-        var status = result["status"];
-        var ownerName = result["ownerName"];
+      // Info from result
+      var tokenId = result["tokenId"];
+      var adImage = result["adImage"];
+      var redirectUrl = result["redirectUrl"];
+      var status = result["status"];
+      var ownerName = result["ownerName"];
+
+      contractBillboardReadOnly.methods.tokenURI(tokenId).call().then(function (resultUri, error) {
 
         // HTML
         var resultHtml = "<br/>";
@@ -83,6 +111,7 @@ async function setupPage() {
         resultHtml += "<b>redirectUrl:</b> " + redirectUrl + "<br/>";
         resultHtml += "<b>status:</b> " + status + "<br/>";
         resultHtml += "<b>ownerName:</b> " + ownerName + "<br/>";
+        resultHtml += "<b>token ID:</b> " + tokenId + "<br/>";
         resultHtml += "<b>token URI (JSON):</b> " + resultUri + "<br/>";
         resultHtml += "<br/>";
         $("#fg_showInfo").html(resultHtml);
@@ -246,10 +275,10 @@ function loadCell(slot) {
   contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
 
     // Debug
-    //console.log("result: ");
-    //console.log(result);
-    //console.log("error: ");
-    //console.log(error);
+    // console.log("result: ");
+    // console.log(result);
+    // console.log("error: ");
+    // console.log(error);
 
     // Data from response
     var owner = result["ownerName"] || 'nobody';
