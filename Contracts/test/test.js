@@ -17,7 +17,7 @@ contract("Owner can update metadata", function(accounts) {
     for (let index = 0; index < 10; index++) {
       let resultMint = await BillboardInstance.mintToken(
         0,
-        index.toString(), 
+        "A" + index.toString(), 
         "imageParam" + index.toString(),
         "cityParam",
         {from: ownerAddress}
@@ -32,11 +32,13 @@ contract("Owner can update metadata", function(accounts) {
     const ownerAddress = accounts[0];
     const BillboardInstance = await Decentraboard.deployed();
 
-    let resultSetBaseUri = await BillboardInstance.setBaseTokenURI(
-      "https://decentraboard.com/token/",
+    let resultUriPrefix = await BillboardInstance.setTokenURI(
+      "https://decentraboard.com/slots/",
+      ".json",
       {from: ownerAddress}
     );
-    assert.equal(resultSetBaseUri.receipt.status, true, "Transaction should succeed");
+    assert.equal(resultUriPrefix.receipt.status, true, "Transaction should succeed");
+
   });
 
   it("Owner should be able to set all metadata at once", async () => {
@@ -70,10 +72,10 @@ contract("Owner can update metadata", function(accounts) {
 
     // Get ERC721 token URI
     var resultGetTokenUri = await BillboardInstance.tokenURI(1);
-    assert.equal(resultGetTokenUri, "https://decentraboard.com/token/1", "Wrong ERC721 token URI");
+    assert.equal(resultGetTokenUri, "https://decentraboard.com/slots/0-A1.json", "Wrong ERC721 token URI");
 
     resultGetTokenUri = await BillboardInstance.tokenURI(2);
-    assert.equal(resultGetTokenUri, "https://decentraboard.com/token/2", "Wrong ERC721 token URI");
+    assert.equal(resultGetTokenUri, "https://decentraboard.com/slots/0-A2.json", "Wrong ERC721 token URI");
 
     // Get all metadata
     var resultGetData = await BillboardInstance._tokenData(0, "1");
@@ -130,7 +132,7 @@ contract("Owner can update metadata", function(accounts) {
 
     // Get ERC721 token URI
     let resultGetTokenUri = await BillboardInstance.tokenURI(1);
-    assert.equal(resultGetTokenUri, "https://decentraboard.com/token/1", "Wrong ERC721 token URI");
+    assert.equal(resultGetTokenUri, "https://decentraboard.com/slots/0-A1.json", "Wrong ERC721 token URI");
 
     // Get all metadata
     let resultGetData = await BillboardInstance._tokenData(0, "1");
@@ -304,11 +306,12 @@ contract("Only owner can update base URI", function(accounts) {
 
     // Update base URI
     await truffleAssert.reverts(
-      BillboardInstance.setBaseTokenURI(
+      BillboardInstance.setTokenURI(
         "https://decentraboard.com/token/",
+        ".json",
         {from: userAddress}
       ),
-      "Only owner can update base URI"
+      "Only owner can update URI"
     );
   });
 

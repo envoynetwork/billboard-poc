@@ -23,6 +23,11 @@ contract Decentraboard is ERC721, Ownable {
     string ownerName;
   }
 
+  struct TokenIdInfo {
+    uint256 boardId;
+    string slot;
+  }
+
   //
   // ******************* VARIABLES *******************
   //
@@ -30,8 +35,12 @@ contract Decentraboard is ERC721, Ownable {
   // MetaData map
   mapping(uint256 => mapping(string => MetaData)) public _tokenData;
 
-  // Base URI
-  string private _baseTokenURI = "";
+  // Token ID to board+slot info
+  mapping(uint256 => TokenIdInfo) public _tokenIdInfo;
+
+  // Token URI
+  string private _tokenURIPrefix = "";
+  string private _tokenURISuffix = "";
 
   // Total tokens
   uint256 private _totalSupply = 0;
@@ -95,6 +104,10 @@ contract Decentraboard is ERC721, Ownable {
     // Update hardcoded metadata
     _tokenData[boardId][slot].image = image;
     _tokenData[boardId][slot].city = city;
+
+    // Update token ID info
+    _tokenIdInfo[tokenId].boardId = boardId;
+    _tokenIdInfo[tokenId].slot = slot;
   }
 
   function mintTokenWithData(
@@ -122,15 +135,22 @@ contract Decentraboard is ERC721, Ownable {
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "Token does not exist");
 
-    return string(abi.encodePacked(_baseTokenURI, tokenId.toString()));
+    uint256 boardId = _tokenIdInfo[tokenId].boardId;
+    string memory slot = _tokenIdInfo[tokenId].slot;
+
+    return string(abi.encodePacked(_tokenURIPrefix, boardId.toString(), "-", slot, _tokenURISuffix));
   }
 
-  function setBaseTokenURI(string memory baseTokenURI) public {
-    require(_msgSender() == _contractOwner, "Only owner can update base URI");
+  //
+  // ******************* TOKEN URI *******************
+  //
 
-    _baseTokenURI = baseTokenURI;
+  function setTokenURI(string memory prefix, string memory suffix) public {
+    require(_msgSender() == _contractOwner, "Only owner can update URI");
+
+    _tokenURIPrefix = prefix;
+    _tokenURISuffix = suffix;
   }
-
 
   //
   // ******************* SETTERS *******************
