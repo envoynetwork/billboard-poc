@@ -48,8 +48,8 @@ Useful commands:
 //    TESTNET   
 ------------------------
 
-- Goerli testnet (is already included in MetaMask)
-- Get ETH on testnet: https://app.mycrypto.com/faucet
+- Get ETH on Goerli testnet: https://app.mycrypto.com/faucet
+- Get ETH on Rinkeby testnet: https://www.rinkeby.io/#faucet
 - Use Infura (infura.io) to connect to an Ethereum node
 
 ------------------------

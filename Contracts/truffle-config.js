@@ -27,6 +27,14 @@ module.exports = {
       },
       network_id: 5,
       gas: 4000000
+    },
+
+    // Testnet
+    rinkeby: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/" + infuraKey)
+      },
+      network_id: 4
     }
 
     // Mainnet

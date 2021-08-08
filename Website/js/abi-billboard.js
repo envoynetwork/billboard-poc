@@ -167,6 +167,31 @@ const abiBillboard = [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "_tokenIdInfo",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "boardId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "slot",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "to",
         "type": "address"
@@ -567,11 +592,16 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "string",
-        "name": "baseTokenURI",
+        "name": "prefix",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "suffix",
         "type": "string"
       }
     ],
-    "name": "setBaseTokenURI",
+    "name": "setTokenURI",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

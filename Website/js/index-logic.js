@@ -77,10 +77,11 @@ async function setupPage() {
   
   // Set URI
   $("#tu_setUri").click(function () {
-    var baseUri = document.getElementById("tu_uri").value;
+    var prefix = document.getElementById("tu_prefix").value;
+    var suffix = document.getElementById("tu_suffix").value;
 
     // Smart contract call
-    contractBillboard.methods.setBaseTokenURI(baseUri).send({ from: connectedWallet, }).then(function (result, error) {
+    contractBillboard.methods.setTokenURI(prefix, suffix).send({ from: connectedWallet, }).then(function (result, error) {
       console.log("URI result:");
       console.log(result);
     }).catch(function (error) {
@@ -221,6 +222,8 @@ async function connectWallet() {
     let connectedNetwork = window.ethereum.networkVersion;
     if (connectedNetwork == "1") {
       $("#i_network_name").html("Ethereum Mainnet");
+    } else if (connectedNetwork == "4") {
+      $("#i_network_name").html("Rinkeby Testnet");
     } else if (connectedNetwork == "5") {
       $("#i_network_name").html("Goerli Testnet");
     } else {
