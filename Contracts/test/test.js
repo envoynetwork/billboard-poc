@@ -470,3 +470,30 @@ contract("Mint new tokens access right", function(accounts) {
   });
 
 });
+
+//
+// ******************* CONTRACT URI *******************
+//
+contract("Can set contract URI", function(accounts) {
+
+  it("Owner should be able to set contract URI", async () => {
+
+    // Const
+    const ownerAddress = accounts[0];
+    const userAddress = accounts[1];
+    const BillboardInstance = await Decentraboard.deployed();
+  
+    // Set contract URI as owner
+    await BillboardInstance.setContractURI("http://www.decentraboard.com/contract.json", {from: ownerAddress});
+
+    let result = await BillboardInstance.contractURI();
+    assert.equal(result, "http://www.decentraboard.com/contract.json", "Contract URI should be set");
+
+    // User can not set contract URI
+    await truffleAssert.reverts(
+      BillboardInstance.setContractURI("test", {from: userAddress}),
+      "Only owner can update contract URI"
+    );
+  });
+
+});

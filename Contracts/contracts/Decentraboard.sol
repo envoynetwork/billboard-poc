@@ -42,6 +42,9 @@ contract Decentraboard is ERC721, Ownable {
   string private _tokenURIPrefix = "";
   string private _tokenURISuffix = "";
 
+  // Contract URI
+  string private _contractURI = "";
+
   // Total tokens
   uint256 private _totalSupply = 0;
 
@@ -150,6 +153,20 @@ contract Decentraboard is ERC721, Ownable {
 
     _tokenURIPrefix = prefix;
     _tokenURISuffix = suffix;
+  }
+
+  //
+  // ******************* CONTRACT URI *******************
+  //
+
+  function contractURI() public view returns (string memory) {
+    return _contractURI;
+  }
+
+  function setContractURI(string memory contractUri) public {
+    require(_msgSender() == _contractOwner, "Only owner can update contract URI");
+
+    _contractURI = contractUri;
   }
 
   //
