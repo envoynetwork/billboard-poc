@@ -90,6 +90,20 @@ async function setupPage() {
     });
   });
 
+  // Set contract URI
+  $("#cu_set").click(function () {
+    var uri = document.getElementById("cu_uri").value;
+
+    // Smart contract call
+    contractBillboard.methods.setContractURI(uri).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("URI result:");
+      console.log(result);
+    }).catch(function (error) {
+      console.log("URI error:");
+      console.log(error);
+    });
+  });
+
   // Get metadata button
   $("#fg_getInfo").click(function () {
     var slot = document.getElementById("fg_slot").value;
@@ -242,6 +256,10 @@ async function connectWallet() {
 
     // Reload grid to get my slots
     loadGrid();
+
+    contractBillboardReadOnly.methods.contractURI().call().then(function (result, error) {
+      $("#i_contracturi").html(result);
+    });
     
   } catch (error) {
     if (error.code === 4001) {

@@ -607,6 +607,33 @@ const abiBillboard = [
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "contractURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "contractUri",
+        "type": "string"
+      }
+    ],
+    "name": "setContractURI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
