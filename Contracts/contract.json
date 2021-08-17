@@ -3,6 +3,6 @@
   "description": "DECENTRABOARD or the 'ENVOY Billboard' is the first NFT curated billboard that has the ambition to be on display year round in the most iconic and unique locations around the globe, both online and offline.",
   "image": "https://www.decentraboard.com/decentraboard.png",
   "external_link": "https://www.decentraboard.com",
-  "seller_fee_basis_points": 2500,
+  "seller_fee_basis_points": 1000,
   "fee_recipient": "0xcd0288BfAe949D73767489D64cB8F2E7e7D3C874"
 }
