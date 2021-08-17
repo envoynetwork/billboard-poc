@@ -309,7 +309,7 @@ function loadCell(slot) {
 
     // Default data
     if (adImage == "") {
-      adImage = "https://www.envoy.art/wp-content/uploads/2021/07/envoylogo-trans.png";
+      adImage = "https://envoy.art/_nuxt/img/header-logo.53658de.svg";
       redirectUrl = "https://www.envoy.art/";
     }
 
