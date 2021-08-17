@@ -26,16 +26,20 @@ contract Decentraboard is ERC721, Ownable {
   struct TokenIdInfo {
     uint256 boardId;
     string slot;
+    bool locked;
   }
 
   //
   // ******************* VARIABLES *******************
   //
 
+  // Deploy time
+  uint256 private _deployTime = block.timestamp;
+
   // MetaData map
   mapping(uint256 => mapping(string => MetaData)) public _tokenData;
 
-  // Token ID to board+slot info
+  // Token ID to board+slot info (for token URI)
   mapping(uint256 => TokenIdInfo) public _tokenIdInfo;
 
   // Token URI
@@ -111,6 +115,7 @@ contract Decentraboard is ERC721, Ownable {
     // Update token ID info
     _tokenIdInfo[tokenId].boardId = boardId;
     _tokenIdInfo[tokenId].slot = slot;
+    _tokenIdInfo[tokenId].locked = false;
   }
 
   function mintTokenWithData(
@@ -227,6 +232,45 @@ contract Decentraboard is ERC721, Ownable {
     require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
 
     _tokenData[boardId][slot].ownerName = ownerName;
+  }
+
+  //
+  // ******************* TRANSFER LOCK *******************
+  //
+  
+  function setLock(uint256 boardId, string memory slot, bool locked) public {
+    uint256 tokenId = _tokenData[boardId][slot].tokenId;
+
+    require(_exists(tokenId), "Token does not exist");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update token lock");
+
+    _tokenIdInfo[tokenId].locked = locked;
+  }
+
+  function isTokenLocked(uint256 tokenId) public view returns (bool) {
+    if (_tokenIdInfo[tokenId].locked == false) {
+      return false;
+    }
+
+    // 86400 seconds in 1 day
+    uint256 daysPassed = (block.timestamp - _deployTime).div(86400);
+
+    // 6 months * 30.5 days = 183 days
+    return daysPassed < uint256(183);
+  }
+
+  function transferFrom(address from, address to, uint256 tokenId) public virtual override {
+    require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+    require(isTokenLocked(tokenId) == false, "Token still locked");
+
+    _transfer(from, to, tokenId);
+  }
+
+  function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override {
+    require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+    require(isTokenLocked(tokenId) == false, "Token still locked");
+
+    _safeTransfer(from, to, tokenId, _data);
   }
 
 }

@@ -1,4 +1,5 @@
 const truffleAssert = require('truffle-assertions');
+const truffleHelpers = require('openzeppelin-test-helpers');
 
 const Decentraboard = artifacts.require("Decentraboard");
 
@@ -236,9 +237,17 @@ contract("Owner can transfer token", function(accounts) {
     const ownerAddress = accounts[0];
     const userAddress = accounts[1];
     const BillboardInstance = await Decentraboard.deployed();
+
+    // Check owner of token
+    var resultOwnerOf = await BillboardInstance.ownerOf(1);
+    assert.equal(resultOwnerOf, ownerAddress, "Deployer is owner");
   
     // Transfer
     await BillboardInstance.transferFrom(ownerAddress, userAddress, 1, {from: ownerAddress});
+    
+    // Check owner of token
+    var resultOwnerOf = await BillboardInstance.ownerOf(1);
+    assert.equal(resultOwnerOf, userAddress, "User is now owner");
 
     // Can not transfer again
     await truffleAssert.reverts(
@@ -494,6 +503,88 @@ contract("Can set contract URI", function(accounts) {
       BillboardInstance.setContractURI("test", {from: userAddress}),
       "Only owner can update contract URI"
     );
+  });
+
+});
+
+//
+// ******************* LOCKUP *******************
+//
+contract("Owner can transfer token", function(accounts) {
+
+  before("Mint 10 tokens", async function () {
+
+    // Const
+    const ownerAddress = accounts[0];
+    const BillboardInstance = await Decentraboard.deployed();
+
+    // Loop to create tokens
+    for (let index = 0; index < 10; index++) {
+      let resultMint = await BillboardInstance.mintToken(
+        0,
+        index.toString(), 
+        "imageParam",
+        "cityParam",
+        {from: ownerAddress}
+      );
+      assert.equal(resultMint.receipt.status, true, "Transaction should succeed");
+    }
+  });
+
+  it("Owner should be able to transfer token", async () => {
+
+    // Const
+    const ownerAddress = accounts[0];
+    const userAddress = accounts[1];
+    const BillboardInstance = await Decentraboard.deployed();
+
+    // Check lock
+    var resultLock = await BillboardInstance.isTokenLocked(0);
+    assert.equal(resultLock, false, "Lock should not be set yet");
+
+    // Set lock
+    let resultOwnerName = await BillboardInstance.setLock(
+      0,
+      "0", 
+      true,
+      {from: ownerAddress}
+    );
+    assert.equal(resultOwnerName.receipt.status, true, "Transaction should succeed");
+
+    // Check lock
+    var resultLock = await BillboardInstance.isTokenLocked(0);
+    assert.equal(resultLock, true, "Lock should be set");
+ 
+    // Can not transfer locked token
+    await truffleAssert.reverts(
+      BillboardInstance.transferFrom(ownerAddress, userAddress, 0, {from: ownerAddress}),
+      "Token still locked"
+    );
+    await truffleAssert.reverts(
+      BillboardInstance.safeTransferFrom(ownerAddress, userAddress, 0, {from: ownerAddress}),
+      "Token still locked"
+    );
+
+    // Advance 182 days (almost 6 months)
+    await truffleHelpers.time.increase(truffleHelpers.time.duration.days(182));
+
+    // Check lock
+    var resultLock = await BillboardInstance.isTokenLocked(0);
+    assert.equal(resultLock, true, "Lock should be set");
+
+    // Advance 1 day so we are at 6 months
+    await truffleHelpers.time.increase(truffleHelpers.time.duration.days(1));
+
+    // Check lock
+    var resultLock = await BillboardInstance.isTokenLocked(0);
+    assert.equal(resultLock, false, "Lock should be not be set anymore");
+
+    // Transfer should succeed
+    await BillboardInstance.transferFrom(ownerAddress, userAddress, 1, {from: ownerAddress});
+
+    // Check owner of token
+    var resultOwnerOf = await BillboardInstance.ownerOf(1);
+    assert.equal(resultOwnerOf, userAddress, "User is now owner");
   });
 
 });
