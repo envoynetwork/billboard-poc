@@ -3,7 +3,7 @@
 const webProvider = "https://rinkeby.infura.io/v3/7f75cdf1272147e1825e86ea91debde6";
 
 // Setup once contract is deployed
-const billboardAddress = "0xDC2b4ba7a0De4abD5585258b633c980e2C3a64C7";
+const billboardAddress = "0x23B389f10745bBA589Eec0410cbE013e100e1FE6";
 
 export { webProvider };
 export { billboardAddress };
