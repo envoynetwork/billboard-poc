@@ -13,6 +13,10 @@ contract Decentraboard is ERC721, Ownable {
   // ******************* METADATA STRUCT *******************
   //
 
+  /* Do they all need to be strings or can some of them be bytesXX?
+   Gas cost might be reduced when grouping the variables in blocks of 32
+   and reordering them.
+  */
   struct MetaData {
     uint256 tokenId;
     string image;
@@ -23,6 +27,7 @@ contract Decentraboard is ERC721, Ownable {
     string ownerName;
   }
 
+  // Is uint256 needed for the boardId? Can slot be bytesXX?
   struct TokenIdInfo {
     uint256 boardId;
     string slot;
@@ -34,6 +39,7 @@ contract Decentraboard is ERC721, Ownable {
   //
 
   // Deploy time
+  // Is uint256 needed for the timestamp or can it be lower?
   uint256 private _deployTime = block.timestamp;
 
   // MetaData map
@@ -43,6 +49,7 @@ contract Decentraboard is ERC721, Ownable {
   mapping(uint256 => TokenIdInfo) public _tokenIdInfo;
 
   // Token URI
+  // Is explicity setting the default value necessary for next 6 cases?
   string private _tokenURIPrefix = "";
   string private _tokenURISuffix = "";
 
@@ -76,7 +83,6 @@ contract Decentraboard is ERC721, Ownable {
 
   function updateContractOwner(address owner) public {
     require(_msgSender() == _contractOwner, "Only owner can transfer ownership");
-
     _contractOwner = owner; 
   }
 
@@ -178,6 +184,8 @@ contract Decentraboard is ERC721, Ownable {
   // ******************* SETTERS *******************
   //
 
+  // If we would redefine the types of the struct and reorder the variables,
+  // We should do the same with the order of variables in this function for optimization
   function setMetaData(
       uint256 boardId,
       string memory slot, 
@@ -188,6 +196,8 @@ contract Decentraboard is ERC721, Ownable {
     ) public {
 
     uint256 tokenId = _tokenData[boardId][slot].tokenId;
+
+    // Pure taste: These 2 require statements occurs multiple times. Should we put them into a modifier?
 
     require(_exists(tokenId), "Token does not exist");
     require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
@@ -237,7 +247,12 @@ contract Decentraboard is ERC721, Ownable {
   //
   // ******************* TRANSFER LOCK *******************
   //
-  
+
+  /* Functional question: are locks always for 6 months since deployment?
+  Alternative would be to store a timestamp on which date the lock is released.
+  Logic would remain the same, but the cost is storing a uint32 (or uint64 to be safe) instead of a bool as property.
+  Or, storing a variable amount of months since the deployment in order to store a smaller int (uint8 for up to 20 years since deployment)
+  */
   function setLock(uint256 boardId, string memory slot, bool locked) public {
     uint256 tokenId = _tokenData[boardId][slot].tokenId;
 
