@@ -7,7 +7,9 @@ import "openzeppelin-solidity/contracts/utils/math/SafeMath.sol";
 contract Decentraboard is ERC721, Ownable {
 
   using SafeMath for uint256;
+  using SafeMath for uint128;
   using Strings for uint256;
+  using Strings for uint128;
 
   //
   // ******************* METADATA STRUCT *******************
@@ -15,18 +17,17 @@ contract Decentraboard is ERC721, Ownable {
 
   struct MetaData {
     uint256 tokenId;
-    string image;
-    string city;
+    uint128 tier;
+    bool status;
     string redirectUrl;
     string adImage;
-    bool status;
     string ownerName;
   }
 
   struct TokenIdInfo {
-    uint256 boardId;
-    string slot;
-    bool locked;
+    uint128 boardId;
+    uint128 slot;
+    uint256 unlockTime;
   }
 
   //
@@ -37,26 +38,47 @@ contract Decentraboard is ERC721, Ownable {
   uint256 private _deployTime = block.timestamp;
 
   // MetaData map
-  mapping(uint256 => mapping(string => MetaData)) public _tokenData;
+  mapping(uint128 => mapping(uint128 => MetaData)) public _tokenData;
 
   // Token ID to board+slot info (for token URI)
   mapping(uint256 => TokenIdInfo) public _tokenIdInfo;
 
+  // Token ID to board+slot info (for token URI)
+  mapping(uint128 => uint256) public _tierPrice;
+
+  // Slot image
+  string private _slotImagePrefix;
+  string private _slotImageSuffix;
+
   // Token URI
-  string private _tokenURIPrefix = "";
-  string private _tokenURISuffix = "";
+  string private _tokenURIPrefix;
+  string private _tokenURISuffix;
 
   // Contract URI
-  string private _contractURI = "";
+  string private _contractURI;
 
   // Total tokens
-  uint256 private _totalSupply = 0;
+  uint256 private _totalSupply;
+
+  // Total boards
+  uint256 private _totalBoards = 1;
 
   // Contract owner
-  address private _contractOwner = address(0);
+  address private _contractOwner;
 
-  // Contract minter
-  address private _contractMinter = address(0);
+  // Contract owner
+  address private _wallet;
+
+  //
+  // ******************* MODIFIERS *******************
+  //
+
+  modifier onlyTokenOwner(uint128 boardId, uint128 slot) {
+    uint256 tokenId = _tokenData[boardId][slot].tokenId;
+    require(_tokenData[boardId][slot].tier != 0, "Token does not exist");
+    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
+    _;
+  }
 
   //
   // ******************* SETUP *******************
@@ -67,7 +89,6 @@ contract Decentraboard is ERC721, Ownable {
 
     // Initially the deployer is the owner
     _contractOwner = _msgSender();
-    _contractMinter = _msgSender();
   }
 
   //
@@ -75,65 +96,15 @@ contract Decentraboard is ERC721, Ownable {
   //
 
   function updateContractOwner(address owner) public {
-    require(_msgSender() == _contractOwner, "Only owner can transfer ownership");
+    require(_msgSender() == _contractOwner, "Only contract owner can transfer ownership");
 
     _contractOwner = owner; 
   }
 
-  function updateContractMinter(address minter) public {
-    require(_msgSender() == _contractOwner, "Only owner can update contract minter");
+  function updateWallet(address wallet) public {
+    require(_msgSender() == _contractOwner, "Only contract owner can update wallet");
 
-    _contractMinter = minter;
-  }
-
-  //
-  // ******************* MINT *******************
-  //
-
-  function mintToken(
-      uint256 boardId,
-      string memory slot,
-      string memory image, 
-      string memory city
-    ) public {
-
-    require(_msgSender() == _contractMinter, "Only minter address can mint");
-    require(bytes(_tokenData[boardId][slot].image).length == 0, "Token already exists");
-
-    // Minted token will be send to minter address
-    uint256 tokenId = _totalSupply;
-    _safeMint(_contractMinter, tokenId);
-    _totalSupply += 1;
-
-    // Set tokenId
-    _tokenData[boardId][slot].tokenId = tokenId;
-
-    // Update hardcoded metadata
-    _tokenData[boardId][slot].image = image;
-    _tokenData[boardId][slot].city = city;
-
-    // Update token ID info
-    _tokenIdInfo[tokenId].boardId = boardId;
-    _tokenIdInfo[tokenId].slot = slot;
-    _tokenIdInfo[tokenId].locked = false;
-  }
-
-  function mintTokenWithData(
-      uint256 boardId,
-      string memory slot,
-      string memory image, 
-      string memory city, 
-      string memory adImage, 
-      string memory redirectUrl, 
-      bool status,
-      string memory ownerName
-    ) public {
-
-    // Mint token
-    mintToken(boardId, slot, image, city);
-      
-    // Update editable metadata
-    setMetaData(boardId, slot, adImage, redirectUrl, status, ownerName);
+    _wallet = wallet; 
   }
 
   //
@@ -143,10 +114,10 @@ contract Decentraboard is ERC721, Ownable {
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "Token does not exist");
 
-    uint256 boardId = _tokenIdInfo[tokenId].boardId;
-    string memory slot = _tokenIdInfo[tokenId].slot;
+    uint128 boardId = _tokenIdInfo[tokenId].boardId;
+    uint128 slot = _tokenIdInfo[tokenId].slot;
 
-    return string(abi.encodePacked(_tokenURIPrefix, boardId.toString(), "-", slot, _tokenURISuffix));
+    return string(abi.encodePacked(_tokenURIPrefix, boardId.toString(), "-", slot.toString(), _tokenURISuffix));
   }
 
   //
@@ -154,10 +125,25 @@ contract Decentraboard is ERC721, Ownable {
   //
 
   function setTokenURI(string memory prefix, string memory suffix) public {
-    require(_msgSender() == _contractOwner, "Only owner can update URI");
+    require(_msgSender() == _contractOwner, "Only contract owner can update URI");
 
     _tokenURIPrefix = prefix;
     _tokenURISuffix = suffix;
+  }
+
+  //
+  // ******************* IMAGE URI *******************
+  //
+
+  function setSlotImageURI(string memory prefix, string memory suffix) public {
+    require(_msgSender() == _contractOwner, "Only contract owner can update slot image URI");
+
+    _slotImagePrefix = prefix;
+    _slotImageSuffix = suffix;
+  }
+
+  function slotImageURI(uint128 boardId, uint128 slot) public view returns (string memory) {
+    return string(abi.encodePacked(_slotImagePrefix, boardId.toString(), "-", slot.toString(), _slotImageSuffix));
   }
 
   //
@@ -169,9 +155,97 @@ contract Decentraboard is ERC721, Ownable {
   }
 
   function setContractURI(string memory contractUri) public {
-    require(_msgSender() == _contractOwner, "Only owner can update contract URI");
+    require(_msgSender() == _contractOwner, "Only contract owner can update contract URI");
 
     _contractURI = contractUri;
+  }
+
+  //
+  // ******************* MINT *******************
+  //
+
+  function setTotalBoards(uint256 totalBoards) public {
+    require(_msgSender() == _contractOwner, "Only contract owner can set total amount of boards");
+
+    _totalBoards = totalBoards;
+  }
+
+  function setTierPrice(uint128 tier, uint256 price) public {
+    require(_msgSender() == _contractOwner, "Only contract owner can update tier price");
+
+    _tierPrice[tier] = price;
+  }
+
+  function tierForSlot(uint128 slot) public view returns (uint128) {
+    if (slot < 10) {
+      return 1; 
+    } else if (slot < 14) {
+      return 2; 
+    } else if (slot < 54) {
+      return 3; 
+    } else if (slot < 62) {
+      return 4; 
+    } else if (slot < 122) {
+      return 5; 
+    } else if (slot < 442) {
+      return 6;
+    }
+    return 0;
+  }
+
+  function mintSlot(
+      uint128 boardId,
+      uint128 slot
+    ) public payable {
+
+    // Get tier and check if slot is valid
+    uint128 tier = tierForSlot(slot);
+    require(tier != 0, "Invalid slot");
+
+    // Check if slot can be minted
+    require(_tokenData[boardId][slot].tier == 0, "Slot already minted");
+
+    // Check if board exists
+    require(boardId < _totalBoards, "Board does not exist");
+
+    // Get tier price
+    uint256 tierPrice = _tierPrice[tier];
+
+    // Check if send ETH is equal to tier price
+    uint256 weiAmount = msg.value;
+    require(weiAmount == tierPrice, "Invalid ETH paid");
+
+    // Send ETH to wallet
+    payable(_wallet).transfer(weiAmount);
+
+    // Mint token
+    uint256 tokenId = _totalSupply;
+    _safeMint(_msgSender(), tokenId);
+    _totalSupply += 1;
+
+    // Set token data
+    _tokenData[boardId][slot].tokenId = tokenId;
+    _tokenData[boardId][slot].tier = tier;
+
+    // Update token ID info
+    _tokenIdInfo[tokenId].boardId = boardId;
+    _tokenIdInfo[tokenId].slot = slot;
+  }
+
+  function mintSlotWithData(
+      uint128 boardId,
+      uint128 slot,
+      string memory adImage, 
+      string memory redirectUrl, 
+      bool status,
+      string memory ownerName
+    ) public payable {
+
+    // Mint token
+    mintSlot(boardId, slot);
+      
+    // Update editable metadata
+    setMetaData(boardId, slot, adImage, redirectUrl, status, ownerName);
   }
 
   //
@@ -179,18 +253,13 @@ contract Decentraboard is ERC721, Ownable {
   //
 
   function setMetaData(
-      uint256 boardId,
-      string memory slot, 
+      uint128 boardId,
+      uint128 slot, 
       string memory adImage, 
       string memory redirectUrl, 
       bool status,
       string memory ownerName
-    ) public {
-
-    uint256 tokenId = _tokenData[boardId][slot].tokenId;
-
-    require(_exists(tokenId), "Token does not exist");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
+    ) public onlyTokenOwner(boardId, slot) {
 
     _tokenData[boardId][slot].adImage = adImage;
     _tokenData[boardId][slot].redirectUrl = redirectUrl;
@@ -198,39 +267,19 @@ contract Decentraboard is ERC721, Ownable {
     _tokenData[boardId][slot].ownerName = ownerName;
   }
 
-  function setAdImage(uint256 boardId, string memory slot, string memory adImage) public {
-    uint256 tokenId = _tokenData[boardId][slot].tokenId;
-
-    require(_exists(tokenId), "Token does not exist");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
-
+  function setAdImage(uint128 boardId, uint128 slot, string memory adImage) public onlyTokenOwner(boardId, slot) {
     _tokenData[boardId][slot].adImage = adImage;
   }
 
-  function setRedirectUrl(uint256 boardId, string memory slot, string memory redirectUrl) public {
-    uint256 tokenId = _tokenData[boardId][slot].tokenId;
-
-    require(_exists(tokenId), "Token does not exist");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
-
+  function setRedirectUrl(uint128 boardId, uint128 slot, string memory redirectUrl) public onlyTokenOwner(boardId, slot) {
     _tokenData[boardId][slot].redirectUrl = redirectUrl;
   }
 
-  function setStatus(uint256 boardId, string memory slot, bool status) public {
-    uint256 tokenId = _tokenData[boardId][slot].tokenId;
-
-    require(_exists(tokenId), "Token does not exist");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
-
+  function setStatus(uint128 boardId, uint128 slot, bool status) public onlyTokenOwner(boardId, slot) {
     _tokenData[boardId][slot].status = status;
   }
 
-  function setOwnerName(uint256 boardId, string memory slot, string memory ownerName) public {
-    uint256 tokenId = _tokenData[boardId][slot].tokenId;
-
-    require(_exists(tokenId), "Token does not exist");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update metadata");
-
+  function setOwnerName(uint128 boardId, uint128 slot, string memory ownerName) public onlyTokenOwner(boardId, slot) {
     _tokenData[boardId][slot].ownerName = ownerName;
   }
 
@@ -238,25 +287,15 @@ contract Decentraboard is ERC721, Ownable {
   // ******************* TRANSFER LOCK *******************
   //
   
-  function setLock(uint256 boardId, string memory slot, bool locked) public {
+  function setLock(uint128 boardId, uint128 slot, uint256 unlockTime) public {
+    require(_msgSender() == _contractOwner, "Only owner can update token lock");
+
     uint256 tokenId = _tokenData[boardId][slot].tokenId;
-
-    require(_exists(tokenId), "Token does not exist");
-    require(_msgSender() == ownerOf(tokenId), "Only owner can update token lock");
-
-    _tokenIdInfo[tokenId].locked = locked;
+    _tokenIdInfo[tokenId].unlockTime = unlockTime;
   }
 
   function isTokenLocked(uint256 tokenId) public view returns (bool) {
-    if (_tokenIdInfo[tokenId].locked == false) {
-      return false;
-    }
-
-    // 86400 seconds in 1 day
-    uint256 daysPassed = (block.timestamp - _deployTime).div(86400);
-
-    // 6 months * 30.5 days = 183 days
-    return daysPassed < uint256(183);
+    return _tokenIdInfo[tokenId].unlockTime > block.timestamp;
   }
 
   function transferFrom(address from, address to, uint256 tokenId) public virtual override {

@@ -22,13 +22,22 @@
     </div>
     <br />
 
+    <!-- CONTRACT INFO -->
+    <h2>Contract info</h2>
+    <p>Contract URI: <strong id="i_contracturi">...</strong></p>
+    <p>Price tier 1: <strong id="i_tierprice_1">...</strong> WEI</p>
+    <p>Price tier 2: <strong id="i_tierprice_2">...</strong> WEI</p>
+    <p>Price tier 3: <strong id="i_tierprice_3">...</strong> WEI</p>
+    <p>Price tier 4: <strong id="i_tierprice_4">...</strong> WEI</p>
+    <p>Price tier 5: <strong id="i_tierprice_5">...</strong> WEI</p>
+    <p>Price tier 6: <strong id="i_tierprice_6">...</strong> WEI</p>
+
     <!-- WALLET -->
     <h2>Connect wallet</h2>
     <div id="d_connectWallet" style="display: none;">
       <p>Connected wallet: <strong id="i_wallet_address">...</strong></p>
       <p>On network: <strong id="i_network_name">...</strong></p>
       <p>My slots: <strong id="i_myslots">...</strong></p>
-      <p>Contract URI: <strong id="i_contracturi">...</strong></p>
     </div>
     <button id="b_connectWallet">Connect wallet</button>
     <br />
@@ -36,24 +45,63 @@
     <!-- SETTERS -->
     <div id="d_setters" style="display: none;">
 
-      <!-- ACCESS -->
-      <h2>Set contract owner</h2>
-      Owner address: <input id="a_owner" type="text"><br/>
-      <button id="a_setOwner">Update contract owner</button>
+      <!-- CONTRACT OWNER -->
+      <h2>Contract owner function</h2>
+
+      <h3>Update owner</h3>
+      New owner address: <input id="a_owner" type="text"><br/>
+      <button id="a_set">Update contract owner</button>
       <br /><br />
-      <h2>Set minter</h2>
-      Minter address: <input id="a_minter" type="text"><br/>
-      <button id="a_setMinter">Update minter</button>
+
+      <h3>Update wallet</h3>
+      New payout walet: <input id="w_wallet" type="text"><br/>
+      <button id="w_set">Update wallet</button>
       <br /><br />
+
+      <h3>Token URI</h3>
+      URI prefix: <input id="tu_prefix" type="text"><br/>
+      URI suffix: <input id="tu_suffix" type="text"><br/>
+      <button id="tu_set">Set image URI</button>
+      <br /><br />
+
+      <h3>Image URI</h3>
+      Image prefix: <input id="iu_prefix" type="text"><br/>
+      Image suffix: <input id="iu_suffix" type="text"><br/>
+      <button id="iu_set">Set base URI</button>
+      <br /><br />
+
+      <h3>Contract URI</h3>
+      URI: <input id="cu_uri" type="text"><br/>
+      <button id="cu_set">Set contract URI</button>
+      <br /><br />
+
+      <h3>Lock token</h3>
+      Slot: <input id="l_slot" type="number"><br/>
+      Unlock timestamp: <input id="l_time" type="text"><br/>
+      <button id="l_set">Set lock on token</button>
+      <br /><br />
+
+      <h3>Tier price</h3>
+      Tier: <input id="tp_tier" type="number"><br/>
+      Price (in WEI): <input id="tp_price" type="number"><br/>
+      <button id="tp_set">Set tier price</button>
+      <br /><br />
+
+      <h3>Boards</h3>
+      Total available boards: <input id="tb_boards" type="number"><br/>
+      <button id="tb_set">Set total boards</button>
+      <br /><br />
+
 
       <!-- MINT -->
       <h2>Mint token</h2>
+
+      <h3>Mint</h3>
       NFT slot: <input id="fm_slot" type="number"><br/>
       <button id="fm_mintToken">Mint token</button>
       <br /><br />
 
-      <!-- MINT WITH METADATA -->
-      <h2>Mint token with metadata</h2>
+      <h3>Mint with metadata</h3>
       NFT slot: <input id="mwm_slot" type="number"><br/>
       Ad Image: <input id="mwm_adImage" type="text"><br/>
       Redirect URL: <input id="mwm_redirectUrl" type="text"><br/>
@@ -66,20 +114,9 @@
       <button id="mwm_mintToken">Mint token</button>
       <br /><br />
 
-      <!-- TOKEN URI -->
-      <h2>Token URI</h2>
-      URI prefix: <input id="tu_prefix" type="text"><br/>
-      URI suffix: <input id="tu_suffix" type="text"><br/>
-      <button id="tu_setUri">Set base URI</button>
-      <br /><br />
 
-      <!-- CONTRACT URI -->
-      <h2>Contract URI</h2>
-      URI: <input id="cu_uri" type="text"><br/>
-      <button id="cu_set">Set contract URI</button>
-      <br /><br />
 
-      <h2>NFT settings</h2>
+      <h2>NFT metadata</h2>
 
       <!-- GET INFO -->
       <h3>Get NFT info</h3>

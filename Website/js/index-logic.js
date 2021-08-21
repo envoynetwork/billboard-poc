@@ -10,7 +10,7 @@ const contractBillboard = new web3.eth.Contract(abiBillboard, billboardAddress);
 const web3ReadOnly = new Web3(webProvider);
 const contractBillboardReadOnly = new web3ReadOnly.eth.Contract(abiBillboard, billboardAddress);
 
-const TOTAL_SLOTS = 1040;
+const TOTAL_SLOTS = 442;
 
 var mySlots = [];
 var connectedWallet;
@@ -35,53 +35,63 @@ async function setupPage() {
     }
   });
 
-  // Mint button
-  $("#fm_mintToken").click(function () {
-    var slot = document.getElementById("fm_slot").value;
+  //
+  // CONTRACT OWNER
+  //
+
+  // Update owner
+  $("#a_set").click(function () {
+    var address = document.getElementById("a_owner").value;
 
     // Smart contract call
-    contractBillboard.methods.mintToken(0, slot, "imageValue", "cityValue").send({ from: connectedWallet, }).then(function (result, error) {
-      console.log("Mint result:");
+    contractBillboard.methods.updateContractOwner(address).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("Update result:");
       console.log(result);
     }).catch(function (error) {
-      console.log("Mint error:");
+      console.log("Update error:");
       console.log(error);
     });
   });
 
-  // Mint with metadata button
-  $("#mwm_mintToken").click(function () {
-    var slot = document.getElementById("mwm_slot").value;
-    var adImage = document.getElementById("mwm_adImage").value;
-    var redirectUrl = document.getElementById("mwm_redirectUrl").value;
-    var status = document.getElementById("mwm_status").value;
-    var ownerName = document.getElementById("mwm_ownerName").value;
+  // Update wallet
+  $("#w_set").click(function () {
+    var address = document.getElementById("w_wallet").value;
+
+
+    console.log("new wallet: " + address);
+
     // Smart contract call
-    contractBillboard.methods.mintTokenWithData(
-      0, 
-      slot, 
-      "imageValue", 
-      "cityValue",
-      adImage,
-      redirectUrl,
-      status,
-      ownerName
-    ).send({ from: connectedWallet, }).then(function (result, error) {
-      console.log("Mint result:");
+    contractBillboard.methods.updateWallet(address).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("Update result:");
       console.log(result);
     }).catch(function (error) {
-      console.log("Mint error:");
+      console.log("Update error:");
       console.log(error);
     });
   });
-  
+
   // Set URI
-  $("#tu_setUri").click(function () {
+  $("#tu_set").click(function () {
     var prefix = document.getElementById("tu_prefix").value;
     var suffix = document.getElementById("tu_suffix").value;
 
     // Smart contract call
     contractBillboard.methods.setTokenURI(prefix, suffix).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("URI result:");
+      console.log(result);
+    }).catch(function (error) {
+      console.log("URI error:");
+      console.log(error);
+    });
+  });
+
+  // Set image URI
+  $("#iu_set").click(function () {
+    var prefix = document.getElementById("iu_prefix").value;
+    var suffix = document.getElementById("iu_suffix").value;
+
+    // Smart contract call
+    contractBillboard.methods.setSlotImageURI(prefix, suffix).send({ from: connectedWallet, }).then(function (result, error) {
       console.log("URI result:");
       console.log(result);
     }).catch(function (error) {
@@ -104,33 +114,143 @@ async function setupPage() {
     });
   });
 
+  // Set token lock
+  $("#l_set").click(function () {
+    var slot = document.getElementById("l_slot").value;
+    var time = document.getElementById("l_time").value;
+
+    // Smart contract call
+    contractBillboard.methods.setLock(0, slot, time).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("URI result:");
+      console.log(result);
+    }).catch(function (error) {
+      console.log("URI error:");
+      console.log(error);
+    });
+  });
+
+  // Set tier price
+  $("#tp_set").click(function () {
+    var tier = document.getElementById("tp_tier").value;
+    var price = document.getElementById("tp_price").value;
+
+    // Smart contract call
+    contractBillboard.methods.setTierPrice(tier, price).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("URI result:");
+      console.log(result);
+    }).catch(function (error) {
+      console.log("URI error:");
+      console.log(error);
+    });
+  });
+
+  // Set number of boards
+  $("#tb_set").click(function () {
+    var boards = document.getElementById("tb_boards").value;
+
+    // Smart contract call
+    contractBillboard.methods.setTotalBoards(boards).send({ from: connectedWallet, }).then(function (result, error) {
+      console.log("URI result:");
+      console.log(result);
+    }).catch(function (error) {
+      console.log("URI error:");
+      console.log(error);
+    });
+  });
+
+
+  //
+  // CONTRACT OWNER
+  //
+
+  // Mint button
+  $("#fm_mintToken").click(function () {
+    var slot = document.getElementById("fm_slot").value;
+
+    contractBillboard.methods.tierForSlot(slot).call().then(function (tier, error) {
+      contractBillboard.methods._tierPrice(tier).call().then(function (price, error) {
+        contractBillboard.methods.mintSlot(0, slot).send({ from: connectedWallet, value: price }).then(function (result, error) {
+          console.log("Mint result:");
+          console.log(result);
+        }).catch(function (error) {
+          console.log("Mint error:");
+          console.log(error);
+        });
+      });
+    });
+
+  });
+
+  // Mint with metadata button
+  $("#mwm_mintToken").click(function () {
+    var slot = document.getElementById("mwm_slot").value;
+    var adImage = document.getElementById("mwm_adImage").value;
+    var redirectUrl = document.getElementById("mwm_redirectUrl").value;
+    var status = document.getElementById("mwm_status").value;
+    var ownerName = document.getElementById("mwm_ownerName").value;
+
+    contractBillboard.methods.tierForSlot(slot).call().then(function (tier, error) {
+      contractBillboard.methods._tierPrice(tier).call().then(function (price, error) {
+        contractBillboard.methods.mintSlotWithData(
+          0, 
+          slot, 
+          adImage,
+          redirectUrl,
+          status,
+          ownerName
+        ).send({ from: connectedWallet, value: price }).then(function (result, error) {
+          console.log("Mint result:");
+          console.log(result);
+        }).catch(function (error) {
+          console.log("Mint error:");
+          console.log(error);
+        });
+      });
+    });
+  });
+
+
+
+
+
   // Get metadata button
   $("#fg_getInfo").click(function () {
     var slot = document.getElementById("fg_slot").value;
 
     // Get info from contract
     contractBillboardReadOnly.methods._tokenData(0, slot).call().then(function (result, error) {
+      contractBillboardReadOnly.methods.slotImageURI(0, slot).call().then(function (resultImage, error) {
 
-      // Info from result
-      var tokenId = result["tokenId"];
-      var adImage = result["adImage"];
-      var redirectUrl = result["redirectUrl"];
-      var status = result["status"];
-      var ownerName = result["ownerName"];
+        // Info from result
+        var tokenId = result["tokenId"];
+        var adImage = result["adImage"];
+        var redirectUrl = result["redirectUrl"];
+        var status = result["status"];
+        var ownerName = result["ownerName"];
 
-      contractBillboardReadOnly.methods.tokenURI(tokenId).call().then(function (resultUri, error) {
+        contractBillboardReadOnly.methods._tokenIdInfo(tokenId).call().then(function (resultInfo, error) {
+          contractBillboardReadOnly.methods.isTokenLocked(tokenId).call().then(function (resultLock, error) {
+            contractBillboardReadOnly.methods.tokenURI(tokenId).call().then(function (resultUri, error) {
+    
+              // HTML
+              var resultHtml = "<br/>";
+              resultHtml += "<b>image:</b> " + resultImage + "<br/>";
+              resultHtml += "<b>adImage:</b> " + adImage + "<br/>";
+              resultHtml += "<b>redirectUrl:</b> " + redirectUrl + "<br/>";
+              resultHtml += "<b>status:</b> " + status + "<br/>";
+              resultHtml += "<b>ownerName:</b> " + ownerName + "<br/>";
+              resultHtml += "<b>token ID:</b> " + tokenId + "<br/>";
+              resultHtml += "<b>token URI (JSON):</b> " + resultUri + "<br/>";
+              resultHtml += "<b>lock end time:</b> " + resultInfo["unlockTime"] + "<br/>";
+              resultHtml += "<b>locked:</b> " + resultLock + "<br/>";
+              resultHtml += "<br/>";
+              $("#fg_showInfo").html(resultHtml);
+            });
+          });
+        });
 
-        // HTML
-        var resultHtml = "<br/>";
-        resultHtml += "<b>adImage:</b> " + adImage + "<br/>";
-        resultHtml += "<b>redirectUrl:</b> " + redirectUrl + "<br/>";
-        resultHtml += "<b>status:</b> " + status + "<br/>";
-        resultHtml += "<b>ownerName:</b> " + ownerName + "<br/>";
-        resultHtml += "<b>token ID:</b> " + tokenId + "<br/>";
-        resultHtml += "<b>token URI (JSON):</b> " + resultUri + "<br/>";
-        resultHtml += "<br/>";
-        $("#fg_showInfo").html(resultHtml);
       });
+      
     });
   });
 
@@ -173,52 +293,11 @@ async function setupPage() {
     
   });
 
-  // Update owner
-  $("#a_setOwner").click(function () {
-    var address = document.getElementById("a_owner").value;
-
-    // Smart contract call
-    contractBillboard.methods.updateContractOwner(address).send({ from: connectedWallet, }).then(function (result, error) {
-      console.log("Update result:");
-      console.log(result);
-    }).catch(function (error) {
-      console.log("Update error:");
-      console.log(error);
-    });
-  });
-
-  // Update minter
-  $("#a_setMinter").click(function () {
-    var address = document.getElementById("a_minter").value;
-
-    // Smart contract call
-    contractBillboard.methods.updateContractMinter(address).send({ from: connectedWallet, }).then(function (result, error) {
-      console.log("Update result:");
-      console.log(result);
-    }).catch(function (error) {
-      console.log("Update error:");
-      console.log(error);
-    });
-  });
-
   // Load initial grid
   loadGrid();
-}
 
-//
-// ********************* SLOTS *********************
-//
-
-function getSlotNames() {
-  var slotNames = [];
-  var rows = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  rows.forEach(function(row) {    
-    for(let i=1; i <= 40; i++) {
-      var col = String(i).padStart(2, '0');
-      slotNames.push(row + col);
-    }
-  });
-  return slotNames;
+  // Load contract info
+  loadContractInfo();
 }
 
 //
@@ -256,10 +335,6 @@ async function connectWallet() {
 
     // Reload grid to get my slots
     loadGrid();
-
-    contractBillboardReadOnly.methods.contractURI().call().then(function (result, error) {
-      $("#i_contracturi").html(result);
-    });
     
   } catch (error) {
     if (error.code === 4001) {
@@ -267,6 +342,38 @@ async function connectWallet() {
     }
     console.error(error);
   }
+
+}
+
+//
+// ********************* CONTRACT INFO *********************
+//
+
+function loadContractInfo() {
+
+  contractBillboardReadOnly.methods.contractURI().call().then(function (result, error) {
+    $("#i_contracturi").html(result);
+  });
+
+  contractBillboardReadOnly.methods._tierPrice(1).call().then(function (result, error) {
+    $("#i_tierprice_1").html(result);
+  });
+  contractBillboardReadOnly.methods._tierPrice(2).call().then(function (result, error) {
+    $("#i_tierprice_2").html(result);
+  });
+  contractBillboardReadOnly.methods._tierPrice(3).call().then(function (result, error) {
+    $("#i_tierprice_3").html(result);
+  });
+  contractBillboardReadOnly.methods._tierPrice(4).call().then(function (result, error) {
+    $("#i_tierprice_4").html(result);
+  });
+  contractBillboardReadOnly.methods._tierPrice(5).call().then(function (result, error) {
+    $("#i_tierprice_5").html(result);
+  });
+  contractBillboardReadOnly.methods._tierPrice(6).call().then(function (result, error) {
+    $("#i_tierprice_6").html(result);
+  });
+
 
 }
 
@@ -286,7 +393,7 @@ function loadGrid() {
 
   // Load info for each cell
   for (var i = 0; i < TOTAL_SLOTS; i++) {
-    loadCell(i.toString());
+    loadCell(i);
   }
 }
 
@@ -305,11 +412,11 @@ function loadCell(slot) {
     var owner = result["ownerName"] || 'nobody';
     var adImage = result["adImage"];
     var redirectUrl = result["redirectUrl"];
-    var slotName = getSlotNames()[slot];
+    var slotName = slot;
 
     // Default data
     if (adImage == "") {
-      adImage = "https://envoy.art/_nuxt/img/header-logo.53658de.svg";
+      adImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/1200px-BTC_Logo.svg.png";
       redirectUrl = "https://www.envoy.art/";
     }
 

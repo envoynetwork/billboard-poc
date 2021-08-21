@@ -40,8 +40,9 @@ Excluded files:
 
 Useful commands:
 - $ truffle test
+- $ truffle test ./test/mint.js 
 - $ truffle migrate --network development
-- $ truffle migrate --reset
+- $ truffle migrate --reset --network rinkeby
 
 
 ------------------------

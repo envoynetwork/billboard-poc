@@ -112,14 +112,34 @@ const abiBillboard = [
   {
     "inputs": [
       {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "name": "_tierPrice",
+    "outputs": [
+      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
       },
       {
-        "internalType": "string",
+        "internalType": "uint128",
         "name": "",
-        "type": "string"
+        "type": "uint128"
       }
     ],
     "name": "_tokenData",
@@ -130,14 +150,14 @@ const abiBillboard = [
         "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "image",
-        "type": "string"
+        "internalType": "uint128",
+        "name": "tier",
+        "type": "uint128"
       },
       {
-        "internalType": "string",
-        "name": "city",
-        "type": "string"
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
       },
       {
         "internalType": "string",
@@ -148,11 +168,6 @@ const abiBillboard = [
         "internalType": "string",
         "name": "adImage",
         "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "status",
-        "type": "bool"
       },
       {
         "internalType": "string",
@@ -175,14 +190,19 @@ const abiBillboard = [
     "name": "_tokenIdInfo",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "boardId",
-        "type": "uint256"
+        "type": "uint128"
       },
       {
-        "internalType": "string",
+        "internalType": "uint128",
         "name": "slot",
-        "type": "string"
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "unlockTime",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -331,57 +351,6 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "safeTransferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "safeTransferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "operator",
         "type": "address"
       },
@@ -434,29 +403,6 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "transferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "newOwner",
         "type": "address"
       }
@@ -483,87 +429,11 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "minter",
+        "name": "wallet",
         "type": "address"
       }
     ],
-    "name": "updateContractMinter",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "boardId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "slot",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "image",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "city",
-        "type": "string"
-      }
-    ],
-    "name": "mintToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "boardId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "slot",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "image",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "city",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "adImage",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "redirectUrl",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "status",
-        "type": "bool"
-      },
-      {
-        "internalType": "string",
-        "name": "ownerName",
-        "type": "string"
-      }
-    ],
-    "name": "mintTokenWithData",
+    "name": "updateWallet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -607,6 +477,49 @@ const abiBillboard = [
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "prefix",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "suffix",
+        "type": "string"
+      }
+    ],
+    "name": "setSlotImageURI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "boardId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slot",
+        "type": "uint128"
+      }
+    ],
+    "name": "slotImageURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
     "inputs": [],
     "name": "contractURI",
     "outputs": [
@@ -637,13 +550,122 @@ const abiBillboard = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "boardId",
+        "name": "totalBoards",
         "type": "uint256"
+      }
+    ],
+    "name": "setTotalBoards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "tier",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "setTierPrice",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "slot",
+        "type": "uint128"
+      }
+    ],
+    "name": "tierForSlot",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "boardId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slot",
+        "type": "uint128"
+      }
+    ],
+    "name": "mintSlot",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function",
+    "payable": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "boardId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slot",
+        "type": "uint128"
       },
       {
         "internalType": "string",
-        "name": "slot",
+        "name": "adImage",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "redirectUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      },
+      {
+        "internalType": "string",
+        "name": "ownerName",
+        "type": "string"
+      }
+    ],
+    "name": "mintSlotWithData",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function",
+    "payable": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "boardId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slot",
+        "type": "uint128"
       },
       {
         "internalType": "string",
@@ -674,14 +696,14 @@ const abiBillboard = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "boardId",
-        "type": "uint256"
+        "type": "uint128"
       },
       {
-        "internalType": "string",
+        "internalType": "uint128",
         "name": "slot",
-        "type": "string"
+        "type": "uint128"
       },
       {
         "internalType": "string",
@@ -697,14 +719,14 @@ const abiBillboard = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "boardId",
-        "type": "uint256"
+        "type": "uint128"
       },
       {
-        "internalType": "string",
+        "internalType": "uint128",
         "name": "slot",
-        "type": "string"
+        "type": "uint128"
       },
       {
         "internalType": "string",
@@ -720,14 +742,14 @@ const abiBillboard = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "boardId",
-        "type": "uint256"
+        "type": "uint128"
       },
       {
-        "internalType": "string",
+        "internalType": "uint128",
         "name": "slot",
-        "type": "string"
+        "type": "uint128"
       },
       {
         "internalType": "bool",
@@ -743,14 +765,14 @@ const abiBillboard = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "boardId",
-        "type": "uint256"
+        "type": "uint128"
       },
       {
-        "internalType": "string",
+        "internalType": "uint128",
         "name": "slot",
-        "type": "string"
+        "type": "uint128"
       },
       {
         "internalType": "string",
@@ -759,6 +781,123 @@ const abiBillboard = [
       }
     ],
     "name": "setOwnerName",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "boardId",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slot",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "unlockTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "isTokenLocked",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
+    ],
+    "name": "safeTransferFrom",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
