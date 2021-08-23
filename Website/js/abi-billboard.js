@@ -156,7 +156,7 @@ const abiBillboard = [
       },
       {
         "internalType": "bool",
-        "name": "status",
+        "name": "forSale",
         "type": "bool"
       },
       {
@@ -640,7 +640,7 @@ const abiBillboard = [
       },
       {
         "internalType": "bool",
-        "name": "status",
+        "name": "forSale",
         "type": "bool"
       },
       {
@@ -679,7 +679,7 @@ const abiBillboard = [
       },
       {
         "internalType": "bool",
-        "name": "status",
+        "name": "forSale",
         "type": "bool"
       },
       {
@@ -753,11 +753,11 @@ const abiBillboard = [
       },
       {
         "internalType": "bool",
-        "name": "status",
+        "name": "forSale",
         "type": "bool"
       }
     ],
-    "name": "setStatus",
+    "name": "setForSale",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

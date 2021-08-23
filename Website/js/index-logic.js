@@ -225,7 +225,7 @@ async function setupPage() {
         var tokenId = result["tokenId"];
         var adImage = result["adImage"];
         var redirectUrl = result["redirectUrl"];
-        var status = result["status"];
+        var forSale = result["forSale"];
         var ownerName = result["ownerName"];
 
         contractBillboardReadOnly.methods._tokenIdInfo(tokenId).call().then(function (resultInfo, error) {
@@ -237,7 +237,7 @@ async function setupPage() {
               resultHtml += "<b>image:</b> " + resultImage + "<br/>";
               resultHtml += "<b>adImage:</b> " + adImage + "<br/>";
               resultHtml += "<b>redirectUrl:</b> " + redirectUrl + "<br/>";
-              resultHtml += "<b>status:</b> " + status + "<br/>";
+              resultHtml += "<b>forSale:</b> " + forSale + "<br/>";
               resultHtml += "<b>ownerName:</b> " + ownerName + "<br/>";
               resultHtml += "<b>token ID:</b> " + tokenId + "<br/>";
               resultHtml += "<b>token URI (JSON):</b> " + resultUri + "<br/>";

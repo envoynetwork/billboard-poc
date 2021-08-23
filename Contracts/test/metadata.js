@@ -76,7 +76,7 @@ contract("Owner can update metadata", function(accounts) {
     );
     assert.equal(resultRedirectUrl.receipt.status, true, "Transaction should succeed");
 
-    let resultStatus = await BillboardInstance.setStatus(
+    let resultStatus = await BillboardInstance.setForSale(
       0,
       5, 
       true,
@@ -141,7 +141,7 @@ contract("Owner can update metadata", function(accounts) {
     );
 
     await truffleAssert.reverts(
-      BillboardInstance.setStatus(
+      BillboardInstance.setForSale(
         0,
         1, 
         true,
@@ -202,7 +202,7 @@ contract("Owner can update metadata", function(accounts) {
     );
 
     await truffleAssert.reverts(
-      BillboardInstance.setStatus(
+      BillboardInstance.setForSale(
         0,
         100, 
         true,
