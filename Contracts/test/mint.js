@@ -142,7 +142,7 @@ contract("Buyer can mint slot", function(accounts) {
     var resultGetData = await BillboardInstance._tokenData(0, 4);
     assert.equal(resultGetData.adImage, "adImageParam1", "Wrong adImage");
     assert.equal(resultGetData.redirectUrl, "redirectUrlParam1", "Wrong redirectUrl");
-    assert.equal(resultGetData.status, true, "Wrong status");
+    assert.equal(resultGetData.forSale, true, "Wrong forSale");
     assert.equal(resultGetData.ownerName, "ownerNameParam1", "Wrong ownerName");
   });
 

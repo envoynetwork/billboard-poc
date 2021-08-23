@@ -41,13 +41,13 @@ contract("Owner can update metadata", function(accounts) {
     var resultGetData = await BillboardInstance._tokenData(0, "1");
     assert.equal(resultGetData.adImage, "adImageParam1", "Wrong adImage");
     assert.equal(resultGetData.redirectUrl, "redirectUrlParam1", "Wrong redirectUrl");
-    assert.equal(resultGetData.status, true, "Wrong status");
+    assert.equal(resultGetData.forSale, true, "Wrong forSale");
     assert.equal(resultGetData.ownerName, "ownerNameParam1", "Wrong ownerName");
 
     resultGetData = await BillboardInstance._tokenData(0, "2");
     assert.equal(resultGetData.adImage, "adImageParam2", "Wrong adImage");
     assert.equal(resultGetData.redirectUrl, "redirectUrlParam2", "Wrong redirectUrl");
-    assert.equal(resultGetData.status, true, "Wrong status");
+    assert.equal(resultGetData.forSale, true, "Wrong forSale");
     assert.equal(resultGetData.ownerName, "ownerNameParam2", "Wrong ownerName");
   });
 
@@ -96,7 +96,7 @@ contract("Owner can update metadata", function(accounts) {
     let resultGetData = await BillboardInstance._tokenData(0, 5);
     assert.equal(resultGetData.adImage, "adImageParam", "Wrong adImage");
     assert.equal(resultGetData.redirectUrl, "redirectUrlParam", "Wrong redirectUrl");
-    assert.equal(resultGetData.status, true, "Wrong status");
+    assert.equal(resultGetData.forSale, true, "Wrong forSale");
     assert.equal(resultGetData.ownerName, "ownerNameParam", "Wrong ownerName");
   });
 

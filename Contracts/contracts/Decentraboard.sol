@@ -18,7 +18,7 @@ contract Decentraboard is ERC721, Ownable {
   struct MetaData {
     uint256 tokenId;
     uint128 tier;
-    bool status;
+    bool forSale;
     string redirectUrl;
     string adImage;
     string ownerName;
@@ -237,7 +237,7 @@ contract Decentraboard is ERC721, Ownable {
       uint128 slot,
       string memory adImage, 
       string memory redirectUrl, 
-      bool status,
+      bool forSale,
       string memory ownerName
     ) public payable {
 
@@ -245,7 +245,7 @@ contract Decentraboard is ERC721, Ownable {
     mintSlot(boardId, slot);
       
     // Update editable metadata
-    setMetaData(boardId, slot, adImage, redirectUrl, status, ownerName);
+    setMetaData(boardId, slot, adImage, redirectUrl, forSale, ownerName);
   }
 
   //
@@ -257,13 +257,13 @@ contract Decentraboard is ERC721, Ownable {
       uint128 slot, 
       string memory adImage, 
       string memory redirectUrl, 
-      bool status,
+      bool forSale,
       string memory ownerName
     ) public onlyTokenOwner(boardId, slot) {
 
     _tokenData[boardId][slot].adImage = adImage;
     _tokenData[boardId][slot].redirectUrl = redirectUrl;
-    _tokenData[boardId][slot].status = status;
+    _tokenData[boardId][slot].forSale = forSale;
     _tokenData[boardId][slot].ownerName = ownerName;
   }
 
@@ -275,8 +275,8 @@ contract Decentraboard is ERC721, Ownable {
     _tokenData[boardId][slot].redirectUrl = redirectUrl;
   }
 
-  function setStatus(uint128 boardId, uint128 slot, bool status) public onlyTokenOwner(boardId, slot) {
-    _tokenData[boardId][slot].status = status;
+  function setForSale(uint128 boardId, uint128 slot, bool forSale) public onlyTokenOwner(boardId, slot) {
+    _tokenData[boardId][slot].forSale = forSale;
   }
 
   function setOwnerName(uint128 boardId, uint128 slot, string memory ownerName) public onlyTokenOwner(boardId, slot) {
