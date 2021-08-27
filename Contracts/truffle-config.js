@@ -35,10 +35,15 @@ module.exports = {
         return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/" + infuraKey)
       },
       network_id: 4
-    }
+    },
 
     // Mainnet
-    // TODO
+    mainnet: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://mainnet.infura.io/v3/" + infuraKey)
+      },
+      network_id: 1
+    }
 
   },
 

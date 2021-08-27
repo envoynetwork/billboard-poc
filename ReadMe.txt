@@ -43,6 +43,7 @@ Useful commands:
 - $ truffle test ./test/mint.js 
 - $ truffle migrate --network development
 - $ truffle migrate --reset --network rinkeby
+- $ truffle migrate --reset --network mainnet
 
 
 ------------------------
